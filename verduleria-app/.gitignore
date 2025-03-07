@@ -36,3 +36,33 @@ build/
 
 ### Mac OS ###
 .DS_Store
+# Maven
+/.mvn/
+mvnw
+mvnw.cmd
+
+
+# IntelliJ IDEA
+/.idea/
+
+# Archivos de configuración específicos del proyecto
+
+
+# Archivos generados por el sistema operativo
+Thumbs.db
+Desktop.ini
+
+# Archivos de logs
+*.log
+
+# Archivos de base de datos
+*.sqlite
+*.db
+
+# Archivos temporales de compilación y backups
+*.class
+*.bak
+*.swp
+
+# Archivos de configuración locales de la base de datos
+.idea/dataSources*

@@ -1,66 +1,76 @@
-package com.example.verduleriaapp;
+package com.example.verduleriaapp.controllers;
 
-import conf.ScreenConfig;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.Label;
-import javafx.scene.layout.StackPane;
+import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 
+import javafx.event.ActionEvent;
 import java.io.IOException;
-import java.util.List;
+import java.io.InputStream;
 
 public class MainController {
-    private ScreenConfig screenConfig;
-    private List<Double> dimensiones;
 
     @FXML
-    private StackPane contenedorPrincipal;
+    private Pane MainPane;
 
-    @FXML
-    private Label labelPrincipal;
+    private final String productRoute = "/views/producto-view.fxml";
+    private final String categoryRoute = "/views/categoria-view.fxml";
+    private final String loginRoute = "/login.fxml";
 
-    public MainController() {
-        // Inicializar ScreenConfig y obtener dimensiones de pantalla
-        this.screenConfig = new ScreenConfig();
-        this.dimensiones = screenConfig.obtenerAnchoAltura();
+    public void initialize() {
+        // Opcional: Puedes cargar un Pane inicial si lo deseas
+
     }
 
-    // Método para cambiar el contenido del StackPane dinámicamente
-    private void cambiarVista(String fxmlPath) {
+    @FXML
+    private void loadProductPane() {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxmlPath));
-            Parent nuevaVista = fxmlLoader.load();
-
-            // Limpiar el contenedor y agregar la nueva vista
-            contenedorPrincipal.getChildren().clear();
-            contenedorPrincipal.getChildren().add(nuevaVista);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(productRoute));
+            Parent newPane = loader.load();
+            MainPane.getChildren().clear();
+            MainPane.getChildren().add(newPane);
         } catch (IOException e) {
             e.printStackTrace();
-            System.out.println("❌ Error al cargar la vista: " + fxmlPath);
         }
     }
-
-    // Métodos de navegación
     @FXML
-    private void mostrarInicio() {
-        cambiarVista("com/example/verduleriaapp/main.fxml");
-        labelPrincipal.setText("Bienvenido a la Verdulería");
-    }
-
+        private void loadCategoryPane() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(categoryRoute));
+            Parent newPane = loader.load();
+            MainPane.getChildren().clear();
+            MainPane.getChildren().add(newPane);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+}
     @FXML
-    private void mostrarProductos() {
-        cambiarVista("/com/example/verduleriaapp/pages/product.fxml");
-    }
+    public void logout(ActionEvent event) {
+        try {
+            // Cargar FXML
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(loginRoute));
+            Scene scene = new Scene(fxmlLoader.load(), 600, 400); // Establecer tamaño fijo
 
-    @FXML
-    private void mostrarPedidos() {
-        cambiarVista("/com/example/verduleriaapp/pages/orders.fxml");
-    }
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setTitle("Verdulería");
 
-    @FXML
-    private void mostrarConfiguracion() {
-        cambiarVista("/com/example/verduleriaapp/pages/settings.fxml");
-    }
+            // Cargar ícono
+            InputStream iconStream = getClass().getResourceAsStream("/assets/fruits.png");
+            if (iconStream != null) {
+                stage.getIcons().add(new Image(iconStream));
+            } else {
+                System.out.println("❌ No se encontró el archivo de icono.");
+            }
 
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

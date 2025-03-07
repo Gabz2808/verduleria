@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.verduleriaapp.controllers.MainAdminController"
+            prefHeight="400.0" prefWidth="600.0">
+    <VBox alignment="TOP_CENTER" spacing="10.0" style="-fx-background-color: #2C3E50; -fx-pref-width: 220; -fx-padding: 20;">
+        <Label prefHeight="65.0" prefWidth="141.0" style="-fx-text-fill: white; -fx-font-size: 22px; -fx-font-weight: bold;" text="Verdulería Admin" />
+
+        <Button  style="-fx-pref-width: 180; -fx-background-color: #34495E; -fx-text-fill: white;" text="Inicio" />
+
+        <Label style="-fx-text-fill: #BDC3C7; -fx-font-weight: bold; -fx-padding: 10 0 5 0;" text="Gestión de Productos" />
+        <Button style="-fx-pref-width: 180; -fx-background-color: #34495E; -fx-text-fill: white;" text="Productos" />
+        <Button  style="-fx-pref-width: 180; -fx-background-color: #34495E; -fx-text-fill: white;" text="Categorías" />
+        <Button  style="-fx-pref-width: 180; -fx-background-color: #34495E; -fx-text-fill: white;" text="Inventario" />
+
+        <Label style="-fx-text-fill: #BDC3C7; -fx-font-weight: bold; -fx-padding: 10 0 5 0;" text="Gestión de Transacciones" />
+        <Button style="-fx-pref-width: 180; -fx-background-color: #34495E; -fx-text-fill: white;" text="Ventas" />
+        <Button style="-fx-pref-width: 180; -fx-background-color: #34495E; -fx-text-fill: white;" text="Compras" />
+        <Button  style="-fx-pref-width: 180; -fx-background-color: #34495E; -fx-text-fill: white;" text="Devoluciones" />
+
+        <Label style="-fx-text-fill: #BDC3C7; -fx-font-weight: bold; -fx-padding: 10 0 5 0;" text="Gestión de Entidades" />
+        <Button  style="-fx-pref-width: 180; -fx-background-color: #34495E; -fx-text-fill: white;" text="Clientes" />
+        <Button  style="-fx-pref-width: 180; -fx-background-color: #34495E; -fx-text-fill: white;" text="Proveedores" />
+        <Button  style="-fx-pref-width: 180; -fx-background-color: #34495E; -fx-text-fill: white;" text="Usuarios" />
+
+        <Label style="-fx-text-fill: #BDC3C7; -fx-font-weight: bold; -fx-padding: 10 0 5 0;" text="Reportes y Alertas" />
+        <Button  style="-fx-pref-width: 180; -fx-background-color: #34495E; -fx-text-fill: white;" text="Reportes" />
+        <Button  style="-fx-pref-width: 180; -fx-background-color: #34495E; -fx-text-fill: white;" text="Alertas" />
+        <Button  style="-fx-pref-width: 180; -fx-background-color: #34495E; -fx-text-fill: white;" text="Gastos" />
+
+        <Button onAction="#logout" style="-fx-pref-width: 180;" text="Salir" />
+    </VBox>
+
+</AnchorPane>
