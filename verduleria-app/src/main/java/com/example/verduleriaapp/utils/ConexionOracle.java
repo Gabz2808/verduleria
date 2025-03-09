@@ -1,4 +1,4 @@
-package DB;
+package com.example.verduleriaapp.utils;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

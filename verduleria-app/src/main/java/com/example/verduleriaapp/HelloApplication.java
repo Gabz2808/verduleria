@@ -1,30 +1,44 @@
 package com.example.verduleriaapp;
 
-import DB.ConexionOracle;
+import com.example.verduleriaapp.utils.ConexionOracle;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class HelloApplication extends Application {
     private ConexionOracle conexionOracle;
 
     @Override
     public void start(Stage stage) throws IOException {
+        // Inicializar conexión a la base de datos
         conexionOracle = new ConexionOracle();
-        conexionOracle.conectar(); // Llamar al método público
+        conexionOracle.conectar();
 
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
-        stage.setTitle("Hello!");
+        // Cargar FXML
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/login.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 600, 400); // Establecer tamaño fijo
+
+        stage.setTitle("Verdulería");
+
+        // Cargar ícono
+        InputStream iconStream = getClass().getResourceAsStream("/assets/fruits.png");
+        if (iconStream != null) {
+            stage.getIcons().add(new Image(iconStream));
+        } else {
+            System.out.println("❌ No se encontró el archivo de icono.");
+        }
+
         stage.setScene(scene);
         stage.show();
     }
 
     @Override
     public void stop() {
-        // Asegurarse de cerrar la conexión al salir
+        // Cerrar conexión al salir
         if (conexionOracle != null) {
             conexionOracle.cerrarConexion();
         }
