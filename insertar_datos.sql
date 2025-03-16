@@ -11,17 +11,17 @@ BEGIN
     
     COMMIT;
 END;
-
+/
 DECLARE 
     v_id_rol NUMBER;
 BEGIN
     InsertarRol('Usuario', v_id_rol);
     DBMS_OUTPUT.PUT_LINE('ID del rol insertado: ' || v_id_rol);
+    
     InsertarRol('Administrador', v_id_rol);
     DBMS_OUTPUT.PUT_LINE('ID del rol insertado: ' || v_id_rol);
 END;
-
-SELECT * FROM ROLES
+/
 
 --Insertar Usuarios
 CREATE OR REPLACE PROCEDURE InsertarUsuario(
@@ -38,7 +38,7 @@ BEGIN
     
     COMMIT;
 END;
-
+/
 DECLARE 
     v_id_usuario NUMBER;
 BEGIN
@@ -54,7 +54,7 @@ BEGIN
     InsertarUsuario('Tatiana', 'Tatiana@ejemplo.com', '123456', 1, v_id_usuario);
     DBMS_OUTPUT.PUT_LINE('ID del usuario Tatiana: ' || v_id_usuario);
 END;
-
+/
 -- insertar clientes
 CREATE OR REPLACE PROCEDURE InsertarCliente(
     p_nombre IN VARCHAR2,
@@ -69,7 +69,7 @@ BEGIN
     
     COMMIT;
 END;
-
+/
 DECLARE 
     v_id_cliente NUMBER;
 BEGIN
@@ -101,7 +101,7 @@ BEGIN
     
     COMMIT;
 END;
-
+/
 DECLARE 
     v_id_categoria NUMBER;
 BEGIN
@@ -133,7 +133,7 @@ BEGIN
     
     COMMIT;
 END;
-
+/
 DECLARE 
     v_id_producto NUMBER;
 BEGIN
@@ -182,7 +182,7 @@ BEGIN
     
     COMMIT;
 END;
-
+/
 DECLARE 
     v_id_inventario NUMBER;
 BEGIN
@@ -232,7 +232,7 @@ BEGIN
     
     COMMIT;
 END;
-
+/
 DECLARE 
     v_id_proveedor NUMBER;
 BEGIN
@@ -262,7 +262,7 @@ BEGIN
     
     COMMIT;
 END;
-
+/
 DECLARE 
     v_id_compra NUMBER;
 BEGIN
@@ -303,7 +303,7 @@ BEGIN
     
     COMMIT;
 END;
-
+/
 DECLARE 
     v_id_detalle_compra NUMBER;
 BEGIN
@@ -351,7 +351,7 @@ BEGIN
     
     COMMIT;
 END;
-
+/
 DECLARE 
     v_id_venta NUMBER;
 BEGIN
@@ -395,7 +395,7 @@ BEGIN
     
     COMMIT;
 END;
-
+/
 DECLARE 
     v_id_detalle_venta NUMBER;
 BEGIN
@@ -424,7 +424,8 @@ BEGIN
     DBMS_OUTPUT.PUT_LINE('ID del detalle de venta insertado: ' || v_id_detalle_venta);
 END;
 
--- insertar pagosCREATE OR REPLACE PROCEDURE InsertarPago(
+-- insertar pagos
+CREATE OR REPLACE PROCEDURE InsertarPago(
     p_id_venta IN NUMBER,
     p_metodo_pago IN VARCHAR2,
     p_monto IN DECIMAL,
@@ -437,7 +438,7 @@ BEGIN
     
     COMMIT;
 END;
-
+/
 DECLARE 
     v_id_pago NUMBER;
 BEGIN
@@ -479,7 +480,7 @@ BEGIN
     
     COMMIT;
 END;
-
+/
 DECLARE 
     v_id_devolucion NUMBER;
 BEGIN
@@ -513,7 +514,7 @@ BEGIN
     
     COMMIT;
 END;
-
+/
 DECLARE 
     v_id_gasto NUMBER;
 BEGIN
@@ -548,7 +549,7 @@ BEGIN
     
     COMMIT;
 END;
-
+/
 DECLARE 
     v_id_promocion NUMBER;
 BEGIN
@@ -578,7 +579,7 @@ BEGIN
     
     COMMIT;
 END;
-
+/
 DECLARE 
     v_id_reporte NUMBER;
 BEGIN
@@ -608,7 +609,7 @@ BEGIN
     
     COMMIT;
 END;
-
+/
 DECLARE 
     v_id_alerta NUMBER;
 BEGIN
@@ -639,7 +640,7 @@ BEGIN
     
     COMMIT;
 END;
-
+/
 DECLARE 
     v_id_historial NUMBER;
 BEGIN
@@ -670,7 +671,7 @@ BEGIN
     
     COMMIT;
 END;
-
+/
 DECLARE 
     v_id_historial NUMBER;
 BEGIN
@@ -700,7 +701,7 @@ BEGIN
     
     COMMIT;
 END;
-
+/
 DECLARE 
     v_id_log NUMBER;
 BEGIN
