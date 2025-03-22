@@ -60,7 +60,17 @@ BEGIN
 END;
 
 /*Funcion para obtener el total de compras de un producto*/
-
+CREATE OR REPLACE FUNCTION GetTotalCompra(p_producto_id IN NUMBER) RETURN NUMBER IS
+    v_total_compra NUMBER;
+BEGIN
+    SELECT SUM(dc.cantidad * dc.precio_unitario)
+    INTO v_total_compra
+    FROM detalle_compras dc
+    JOIN compras c ON dc.id_compra = c.id_compra
+    WHERE dc.id_producto = p_producto_id;
+    
+    RETURN v_total_compra;
+END;
 
 /*Funcion para calcular el impuesto de venta IVA*/
 CREATE OR REPLACE FUNCTION CalcularImpuestoVenta(p_monto_venta IN NUMBER) RETURN NUMBER IS
@@ -93,11 +103,87 @@ BEGIN
 END;
 
 /*Funcion para obtener la cantidad de ventas que se realizaron por cliente*/
+CREATE OR REPLACE FUNCTION GetCantidadVentasCliente(p_cliente_id IN NUMBER) RETURN NUMBER IS
+    v_cantidad_ventas NUMBER;
+BEGIN
+    SELECT SUM(dv.cantidad)
+    INTO v_cantidad_ventas
+    FROM detalle_ventas dv
+    JOIN ventas v ON dv.id_venta = v.id_venta
+    WHERE v.id_cliente = p_cliente_id;
+    
+    RETURN v_cantidad_ventas;
+END;
 
+/*Funcion para obtener la cantidad total de compras realizadas por un proveedor*/
+CREATE OR REPLACE FUNCTION GetCantidadComprasProveedor(p_proveedor_id IN NUMBER) RETURN NUMBER IS
+    v_cantidad_compras NUMBER;
+BEGIN
+    SELECT SUM(dc.cantidad)
+    INTO v_cantidad_compras
+    FROM detalle_compras dc
+    JOIN compras c ON dc.id_compra = c.id_compra
+    WHERE c.id_proveedor = p_proveedor_id;
+    
+    RETURN v_cantidad_compras;
+END;
 
+/*Funcion para obtener el promedio de las ventas*/
+CREATE OR REPLACE FUNCTION GetPromedioVentas(p_producto_id IN NUMBER) RETURN NUMBER IS
+    v_promedio_ventas NUMBER;
+BEGIN
+    SELECT AVG(dv.cantidad * dv.precio_unitario)
+    INTO v_promedio_ventas
+    FROM detalle_ventas dv
+    JOIN ventas v ON dv.id_venta = v.id_venta
+    WHERE dv.id_producto = p_producto_id;
+    
+    RETURN v_promedio_ventas;
+END;
 
+/*Funcion para obtener el promedio de compras de un producto*/
+CREATE OR REPLACE FUNCTION GetPromedioCompras(p_producto_id IN NUMBER) RETURN NUMBER IS
+    v_promedio_compras NUMBER;
+BEGIN
+    SELECT AVG(dc.cantidad * dc.precio_unitario)
+    INTO v_promedio_compras
+    FROM detalle_compras dc
+    JOIN compras c ON dc.id_compra = c.id_compra
+    WHERE dc.id_producto = p_producto_id;
+    
+    RETURN v_promedio_compras;
+END;
 
+/*Funcion para obtener el producto mas vendido*/
+CREATE OR REPLACE FUNCTION GetProductoMasVendido RETURN NUMBER IS
+    v_producto_id NUMBER;
+BEGIN
+    SELECT id_producto
+    INTO v_producto_id
+    FROM (
+        SELECT id_producto, SUM(cantidad) AS total_vendido
+        FROM detalle_ventas
+        GROUP BY id_producto
+        ORDER BY total_vendido DESC
+    ) WHERE ROWNUM = 1;
+    
+    RETURN v_producto_id;
+END;
 
-
+/*Funcion para obtener el producto mas comprado*/
+CREATE OR REPLACE FUNCTION GetProductoMasComprado RETURN NUMBER IS
+    v_producto_id NUMBER;
+BEGIN
+    SELECT id_producto
+    INTO v_producto_id
+    FROM (
+        SELECT id_producto, SUM(cantidad) AS total_comprado
+        FROM detalle_compras
+        GROUP BY id_producto
+        ORDER BY total_comprado DESC
+    ) WHERE ROWNUM = 1;
+    
+    RETURN v_producto_id;
+END;
 
 
