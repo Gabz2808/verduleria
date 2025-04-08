@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.verduleriaapp.controllers.add_productController"
+            prefHeight="400.0" prefWidth="600.0">
+
+    <!-- Título del formulario -->
+    <Label text="Agregar Producto" />
+
+    <!-- Formulario de entrada de datos -->
+    <GridPane layoutX="50" layoutY="50" hgap="10" vgap="10">
+
+        <!-- Campo para nombre del producto -->
+        <Label text="Nombre:" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+        <TextField fx:id="nombreField" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+
+        <!-- Campo para categoría -->
+        <Label text="Categoría:" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+        <ComboBox fx:id="categoriaComboBox" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+
+        <!-- Campo para unidad -->
+        <Label text="Unidad:" GridPane.rowIndex="3" GridPane.columnIndex="0" />
+        <ComboBox fx:id="unidadComboBox" GridPane.rowIndex="3" GridPane.columnIndex="1" />
+
+        <!-- Campo para proveedor -->
+        <Label text="Proveedor:" GridPane.rowIndex="4" GridPane.columnIndex="0" />
+        <ComboBox fx:id="proveedorComboBox" GridPane.rowIndex="4" GridPane.columnIndex="1" />
+    </GridPane>
+
+    <!-- Botones para agregar y cancelar -->
+    <HBox spacing="10" layoutX="250" layoutY="300">
+        <Button text="Agregar" fx:id="agregarButton" onAction="#handleAgregar"/>
+        <Button text="Cancelar" fx:id="cancelarButton" onAction="#handleCancelar"/>
+    </HBox>
+
+</AnchorPane>

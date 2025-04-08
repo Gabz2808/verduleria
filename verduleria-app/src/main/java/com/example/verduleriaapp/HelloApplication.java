@@ -1,5 +1,6 @@
 package com.example.verduleriaapp;
 
+import com.example.verduleriaapp.controllers.LoginController;
 import com.example.verduleriaapp.utils.ConexionOracle;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -14,17 +15,24 @@ public class HelloApplication extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        // Inicializar conexión a la base de datos
-        conexionOracle = new ConexionOracle();
-        conexionOracle.conectar();
 
-        // Cargar FXML
+        conexionOracle = new ConexionOracle();
+
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/login.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 600, 400); // Establecer tamaño fijo
+        fxmlLoader.setControllerFactory(param -> {
+            if (param == LoginController.class) {
+                return new LoginController(conexionOracle.getConnection());
+            }
+            try {
+                return param.getDeclaredConstructor().newInstance(); // fallback
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+        Scene scene = new Scene(fxmlLoader.load(), 600, 400);
 
         stage.setTitle("Verdulería");
-
-        // Cargar ícono
         InputStream iconStream = getClass().getResourceAsStream("/assets/fruits.png");
         if (iconStream != null) {
             stage.getIcons().add(new Image(iconStream));
@@ -36,9 +44,9 @@ public class HelloApplication extends Application {
         stage.show();
     }
 
+
     @Override
     public void stop() {
-        // Cerrar conexión al salir
         if (conexionOracle != null) {
             conexionOracle.cerrarConexion();
         }

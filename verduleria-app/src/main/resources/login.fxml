@@ -11,7 +11,8 @@
 <AnchorPane prefHeight="400.0" prefWidth="600.0"
             xmlns="http://javafx.com/javafx/23.0.1"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.example.verduleriaapp.controllers.LoginController">
+            fx:controller="com.example.verduleriaapp.controllers.LoginController"
+            stylesheets="@styles/login.css">
 
     <children>
         <TabPane layoutX="150.0" layoutY="14.0" prefHeight="362.0" prefWidth="300.0" tabClosingPolicy="UNAVAILABLE">
@@ -29,7 +30,8 @@
 
                                 <Button fx:id="btnIngresar" layoutX="124.0" layoutY="236.0"
                                         mnemonicParsing="false" text="INGRESAR"
-                                        onAction="#handleLogin"/>                            </children>
+                                        onAction="#handleLogin"/>
+                            </children>
                         </AnchorPane>
                     </content>
                 </Tab>

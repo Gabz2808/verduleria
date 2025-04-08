@@ -1,35 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.VBox?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<HBox prefHeight="576.0" prefWidth="1053.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.verduleriaapp.controllers.MainController">
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.verduleriaapp.controllers.MainController"
+            prefHeight="400.0" prefWidth="600.0">
+    <VBox alignment="TOP_CENTER" spacing="10.0" style="-fx-background-color: #2C3E50; -fx-pref-width: 220; -fx-padding: 20;">
+        <Label prefHeight="65.0" prefWidth="141.0" style="-fx-text-fill: white; -fx-font-size: 22px; -fx-font-weight: bold;" text="Verdulería Usuario" />
 
-  <!-- Barra de navegación lateral -->
-  <VBox alignment="CENTER" spacing="15.0" style="-fx-background-color: #2C3E50; -fx-pref-width: 220; -fx-padding: 20;">
-    <Label prefHeight="65.0" prefWidth="141.0" style="-fx-text-fill: white; -fx-font-size: 22px; -fx-font-weight: bold;" text="Verdulería" />
-    <Button style="-fx-pref-width: 180;" text="Inicio" />
-    <Button onAction="#loadProductPane" style="-fx-pref-width: 180;" text="Productos" />
-    <Button style="-fx-pref-width: 180;" text="Inventario" />
-    <Button style="-fx-pref-width: 180;" text="Proveedores" />
-    <Button onAction="#logout" style="-fx-pref-width: 180;" text="Salir" />
+        <Button style="-fx-pref-width: 180; -fx-background-color: #34495E; -fx-text-fill: white;" text="Inicio" />
 
-  </VBox>
-   <Pane fx:id="MainPane" prefHeight="658.0" prefWidth="911.0">
-      <children>
-       <Label fx:id="labelPrincipal" layoutX="234.0" layoutY="14.0" style="-fx-font-size: 26px; -fx-font-weight: bold;" text="Bienvenido a la Verdulería Lupita" />
-         <Label fx:id="labelPrincipal1" layoutX="32.0" layoutY="139.0" style="-fx-font-size: 26px; -fx-font-weight: bold;" text="Productos totales" />
-         <Label fx:id="labelPrincipal11" layoutX="597.0" layoutY="347.0" style="-fx-font-size: 26px; -fx-font-weight: bold;" text="Proveedores totales" />
-         <Label fx:id="labelPrincipal111" layoutX="53.0" layoutY="347.0" style="-fx-font-size: 26px; -fx-font-weight: bold;" text="Ventas del día" />
-         <Label fx:id="labelPrincipal1111" layoutX="565.0" layoutY="139.0" style="-fx-font-size: 26px; -fx-font-weight: bold;" text="Producto más vendido" />
-         <Label fx:id="labelPrincipal12" contentDisplay="CENTER" layoutX="116.0" layoutY="231.0" style="-fx-font-size: 26px; -fx-font-weight: bold;" text="????" />
-         <Label fx:id="labelPrincipal121" contentDisplay="CENTER" layoutX="116.0" layoutY="426.0" style="-fx-font-size: 26px; -fx-font-weight: bold;" text="????" />
-         <Label fx:id="labelPrincipal1211" contentDisplay="CENTER" layoutX="695.0" layoutY="426.0" style="-fx-font-size: 26px; -fx-font-weight: bold;" text="????" />
-         <Label fx:id="labelPrincipal1212" contentDisplay="CENTER" layoutX="680.0" layoutY="231.0" style="-fx-font-size: 26px; -fx-font-weight: bold;" text="????" />
-      </children>
-   </Pane>
+        <Label style="-fx-text-fill: #BDC3C7; -fx-font-weight: bold; -fx-padding: 10 0 5 0;" text="Gestión de Productos" />
+        <Button style="-fx-pref-width: 180; -fx-background-color: #34495E; -fx-text-fill: white;" text="Productos" />
+        <Button style="-fx-pref-width: 180; -fx-background-color: #34495E; -fx-text-fill: white;" text="Categorías" />
 
-</HBox>
+        <Label style="-fx-text-fill: #BDC3C7; -fx-font-weight: bold; -fx-padding: 10 0 5 0;" text="Gestión de Transacciones" />
+        <Button style="-fx-pref-width: 180; -fx-background-color: #34495E; -fx-text-fill: white;" text="Ventas" />
+
+        <Label style="-fx-text-fill: #BDC3C7; -fx-font-weight: bold; -fx-padding: 10 0 5 0;" text="Gestión de Entidades" />
+        <Button style="-fx-pref-width: 180; -fx-background-color: #34495E; -fx-text-fill: white;" text="Clientes" />
+
+        <Label style="-fx-text-fill: #BDC3C7; -fx-font-weight: bold; -fx-padding: 10 0 5 0;" text="Reportes y Alertas" />
+        <Button style="-fx-pref-width: 180; -fx-background-color: #34495E; -fx-text-fill: white;" text="Reportes" />
+
+        <Button onAction="#logout" style="-fx-pref-width: 180;" text="Salir" />
+    </VBox>
+</AnchorPane>

@@ -10,19 +10,20 @@ public class ConexionOracle {
     private final String password = "java01";
     private Connection conn; // Almacenar la conexión
 
-    public void conectar() {
+    public ConexionOracle() {
+        conectar();
+    }
+
+    private void conectar() {
         try {
             // Cargar el driver (opcional para Java 6 y 7)
             Class.forName("oracle.jdbc.driver.OracleDriver");
 
             // Establecer la conexión
             conn = DriverManager.getConnection(url, user, password);
-            System.out.println("✅ Conexión exitosa a Oracle 21c");
         } catch (ClassNotFoundException e) {
-            System.out.println("❌ No se encontró el driver JDBC");
             e.printStackTrace();
         } catch (SQLException e) {
-            System.out.println("❌ Error de conexión a la base de datos");
             e.printStackTrace();
         }
     }
