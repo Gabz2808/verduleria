@@ -1,57 +1,44 @@
 package com.example.verduleriaapp.models;
 
-import java.util.Objects;
-
 public class Inventario {
-    private Long idInventario; // Representa el campo ID_INVENTARIO (PK)
-    private String descripcion; // Representa el campo DESCRIPCION
+    private int idInventario; // ID del inventario
+    private int stock;        // Stock del producto
+    private String ubicacion; // Ubicación del producto
 
-    // Constructor vacío
-    public Inventario() {
-    }
-
-    // Constructor con parámetros
-    public Inventario(Long idInventario, String descripcion) {
+    // Constructor
+    public Inventario(int idInventario, int stock, String ubicacion) {
         this.idInventario = idInventario;
-        this.descripcion = descripcion;
+        this.stock = stock;
+        this.ubicacion = ubicacion;
     }
 
-    // Getters y Setters
-    public Long getIdInventario() {
+    public Inventario(int stock, String ubicacion) {
+    }
+
+    // Getter y setter para idInventario
+    public int getIdInventario() {
         return idInventario;
     }
 
-    public void setIdInventario(Long idInventario) {
+    public void setIdInventario(int idInventario) {
         this.idInventario = idInventario;
     }
 
-    public String getDescripcion() {
-        return descripcion;
+    // Getter y setter para stock
+    public int getStock() {
+        return stock;
     }
 
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
+    public void setStock(int stock) {
+        this.stock = stock;
     }
 
-    // Métodos adicionales: equals, hashCode y toString
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Inventario that = (Inventario) o;
-        return Objects.equals(idInventario, that.idInventario);
+    // Getter y setter para ubicacion
+    public String getUbicacion() {
+        return ubicacion;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(idInventario);
-    }
-
-    @Override
-    public String toString() {
-        return "Inventario{" +
-                "idInventario=" + idInventario +
-                ", descripcion='" + descripcion + '\'' +
-                '}';
+    public void setUbicacion(String ubicacion) {
+        this.ubicacion = ubicacion;
     }
 }

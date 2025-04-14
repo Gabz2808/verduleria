@@ -6,6 +6,7 @@ module com.example.verduleriaapp {
     requires org.kordamp.bootstrapfx.core;
     requires java.sql;
     requires java.desktop;
+    requires com.oracle.database.jdbc;
 
     opens com.example.verduleriaapp to javafx.fxml;
     exports com.example.verduleriaapp;

@@ -14,138 +14,122 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.sql.Connection;
 
 public class MainAdminController {
 
+    // Conexión a la base de datos
     private Connection connection;
-    private final String loginRoute = "/login.fxml";
 
-    public MainAdminController() {
-        // Constructor vacío necesario para JavaFX
-    }
-
-
+    // Rutas para diferentes vistas
 
     @FXML
     private Pane MainPane;
 
-    private final ConexionOracle conexionOracle = new ConexionOracle(); // ✅ Creamos instancia
-
-    private static final String BASE_ROUTE = "/views/";
-
+    // Constructor inicializa la conexión a la base de datos
+    public MainAdminController() {
+        this.connection = new ConexionOracle().getConnection();
+        if (this.connection == null) {
+            System.out.println("❌ Error al conectar a la base de datos.");
+        }
+    }
 
     public void initialize() {
+        // Puedes agregar inicializaciones generales aquí si es necesario.
     }
 
     @FXML
     private void loadProductPane() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/producto-view.fxml"));
-            AnchorPane productPane = loader.load();
-            MainPane.getChildren().setAll(productPane);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        loadPane("producto-view.fxml");
     }
-
 
     @FXML
     private void loadCategoryPane() {
-        loadPane("categoria-view.fxml", CategoriaController.class);
+        loadPane("categoria-view.fxml");
     }
 
     @FXML
     private void loadInventoryPane() {
-        loadPane("inventario-view.fxml", InventarioController.class);
+        loadPane("/views/GestionInventario.xml");
     }
 
     @FXML
-    private void loadSalesPane() {
-        loadPane("venta-view.fxml", VentaController.class);
-    }
-
-    @FXML
-    private void loadPurchasesPane() {
-        loadPane("compra-view.fxml", CompraController.class);
-    }
-
-    @FXML
-    private void loadReturnsPane() {
-        loadPane("devolucion-view.fxml", DevolucionController.class);
-    }
-
-    @FXML
-    private void loadClientsPane() {
-        loadPane("cliente-view.fxml", ClienteController.class);
+    private void loadOrdersPane() {
+        loadPane("/views/GestionOrdenesDeCompra.fxml");
     }
 
     @FXML
     private void loadSuppliersPane() {
-        loadPane("proveedor-view.fxml", ProveedorController.class);
+        // Nota que la ruta no tiene un "/views" inicial porque este ya debe estar dentro del classpath
+        loadPane("/views/GestionProveedoresView.fxml");
     }
 
     @FXML
-    private void loadUsersPane() {
-        loadPane("usuario-view.fxml", UsuarioController.class);
+    private void loadReturnsPane() {
+        loadPane("devolucion-view.fxml");
     }
 
     @FXML
     private void loadReportsPane() {
-        loadPane("reporte-view.fxml", ReporteController.class);
-    }
-
-    @FXML
-    private void loadAlertsPane() {
-        loadPane("alerta-view.fxml", AlertaController.class);
+        loadPane("reportes-view.fxml");
     }
 
     @FXML
     private void loadExpensesPane() {
-        loadPane("gasto-view.fxml", GastoController.class);
+        loadPane("gastos-view.fxml");
     }
 
-    private void loadPane(String route, Class<?> controllerClass) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(BASE_ROUTE + route));
-            loader.setControllerFactory(param -> {
-                try {
-                    // Retorna un nuevo controlador con la conexión inyectada
-                    return controllerClass.getConstructor(Connection.class).newInstance(connection);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    return null;
-                }
-            });
+    @FXML
+    private void loadQualityPane() {
+        loadPane("calidad-productos-view.fxml");
+    }
 
-            Parent newPane = loader.load();
-            MainPane.getChildren().clear();
-            MainPane.getChildren().add(newPane);
+    // Método genérico para cargar un nuevo pane en el área principal
+    private void loadPane(String route) {
+        try {
+            // Intenta cargar el recurso
+            URL resourceURL = getClass().getResource(route);
+
+            // Validación: imprime un mensaje si el recurso no se encuentra
+            if (resourceURL == null) {
+                System.out.println("⚠️ Recurso no encontrado: " + route);
+                return;
+            }
+
+            FXMLLoader loader = new FXMLLoader(resourceURL);
+
+            // Cargar y reemplazar el contenido del Pane principal
+            AnchorPane pane = loader.load();
+            MainPane.getChildren().setAll(pane);
         } catch (IOException e) {
             e.printStackTrace();
+            System.out.println("❌ Error al cargar la vista: " + route);
         }
     }
 
     @FXML
     public void logout(ActionEvent event) {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(loginRoute));
-            Scene scene = new Scene(fxmlLoader.load(), 600, 400); // Establecer tamaño fijo
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/login.fxml"));
+            Parent loginPane = fxmlLoader.load();
+            Scene loginScene = new Scene(loginPane, 600, 400); // Tamaño fijo
 
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setTitle("Verdulería");
+            Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            currentStage.setTitle("Iniciar Sesión - Verdulería");
 
             InputStream iconStream = getClass().getResourceAsStream("/assets/fruits.png");
             if (iconStream != null) {
-                stage.getIcons().add(new Image(iconStream));
+                currentStage.getIcons().add(new Image(iconStream));
             } else {
-                System.out.println("❌ No se encontró el archivo de icono.");
+                System.out.println("❌ No se encontró el icono.");
             }
 
-            stage.setScene(scene);
-            stage.show();
+            currentStage.setScene(loginScene);
+            currentStage.show();
         } catch (IOException e) {
             e.printStackTrace();
+            System.out.println("❌ Error al cerrar sesión.");
         }
     }
 }

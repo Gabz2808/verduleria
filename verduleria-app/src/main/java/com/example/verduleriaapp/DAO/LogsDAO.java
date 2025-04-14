@@ -40,8 +40,8 @@ public class LogsDAO {
             while (rs.next()) {
                 Logs log = new Logs();
                 log.setIdLog(rs.getLong("ID_LOG"));
-                log.setDescripcion(rs.getString("DESCRIPCION"));
-                log.setFechaHora(rs.getTimestamp("FECHA_HORA"));
+                log.setAccion(rs.getString("ACCION"));
+                log.setFecha(rs.getTimestamp("FECHA_HORA"));
                 logs.add(log);
             }
         } catch (SQLException e) {

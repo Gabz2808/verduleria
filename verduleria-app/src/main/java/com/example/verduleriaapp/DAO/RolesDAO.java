@@ -51,7 +51,7 @@ public class RolesDAO {
             while (rs.next()) {
                 Roles rol = new Roles();
                 rol.setIdRol(rs.getLong("ID_ROL"));
-                rol.setNombreRol(rs.getString("NOMBRE_ROL"));
+                rol.setNombre(rs.getString("NOMBRE_ROL"));
                 roles.add(rol);
             }
         } catch (SQLException e) {

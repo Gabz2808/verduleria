@@ -17,97 +17,56 @@ public class ProveedorDAO {
         }
     }
 
-    // Método para agregar un nuevo proveedor
-    public void agregarProveedor(Proveedor proveedor) throws SQLException {
-        String sql = "INSERT INTO PROVEEDORES (ID_PROVEEDOR, NOMBRE, CONTACTO, DIRECCION) VALUES (?, ?, ?, ?)";
-
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, proveedor.getId());
-            stmt.setString(2, proveedor.getNombre());
-            stmt.setString(3, proveedor.getContacto());
-            stmt.setString(4, proveedor.getDireccion());
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            System.err.println("❌ Error al agregar proveedor: " + e.getMessage());
-            throw e;
-        }
-    }
-
-    // Método para eliminar un proveedor por su ID
-    public void eliminarProveedor(int idProveedor) throws SQLException {
-        String sql = "DELETE FROM PROVEEDORES WHERE ID_PROVEEDOR = ?";
-
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, idProveedor);
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            System.err.println("❌ Error al eliminar proveedor: " + e.getMessage());
-            throw e;
-        }
-    }
-
-    // Método para actualizar un proveedor
-    public void actualizarProveedor(Proveedor proveedor) throws SQLException {
-        String sql = "UPDATE PROVEEDORES SET NOMBRE = ?, CONTACTO = ?, DIRECCION = ? WHERE ID_PROVEEDOR = ?";
-
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setString(1, proveedor.getNombre());
-            stmt.setString(2, proveedor.getContacto());
-            stmt.setString(3, proveedor.getDireccion());
-            stmt.setInt(4, proveedor.getId());
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            System.err.println("❌ Error al actualizar proveedor: " + e.getMessage());
-            throw e;
-        }
-    }
-
-    // Método para obtener un proveedor por su ID
-    public Proveedor obtenerProveedorPorId(int idProveedor) throws SQLException {
-        Proveedor proveedor = null;
-        String sql = "SELECT * FROM PROVEEDORES WHERE ID_PROVEEDOR = ?";
-
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, idProveedor);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    proveedor = new Proveedor(
-                            rs.getInt("ID_PROVEEDOR"),
-                            rs.getString("NOMBRE"),
-                            rs.getString("CONTACTO"),
-                            rs.getString("DIRECCION")
-                    );
-                }
-            }
-        } catch (SQLException e) {
-            System.err.println("❌ Error al obtener proveedor por ID: " + e.getMessage());
-            throw e;
-        }
-        return proveedor;
-    }
-
-    // Método para obtener todos los proveedores
+    // Obtener todos los proveedores
     public List<Proveedor> obtenerProveedores() throws SQLException {
-        List<Proveedor> proveedores = new ArrayList<>();
-        String sql = "SELECT * FROM PROVEEDORES";
+        List<Proveedor> listaProveedores = new ArrayList<>();
+        String query = "SELECT ID, NOMBRE, CONTACTO, DIRECCION FROM PROVEEDORES";
+        try (PreparedStatement statement = connection.prepareStatement(query);
+             ResultSet resultSet = statement.executeQuery()) {
 
-        try (PreparedStatement stmt = connection.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
+            while (resultSet.next()) {
+                long id = resultSet.getLong("ID"); // Usa getLong
+                String nombre = resultSet.getString("NOMBRE");
+                String contacto = resultSet.getString("CONTACTO");
+                String direccion = resultSet.getString("DIRECCION");
 
-            while (rs.next()) {
-                Proveedor proveedor = new Proveedor(
-                        rs.getInt("ID_PROVEEDOR"),
-                        rs.getString("NOMBRE"),
-                        rs.getString("CONTACTO"),
-                        rs.getString("DIRECCION")
-                );
-                proveedores.add(proveedor);
+                listaProveedores.add(new Proveedor(id, nombre, contacto, direccion));
             }
-        } catch (SQLException e) {
-            System.err.println("❌ Error al obtener proveedores: " + e.getMessage());
-            throw e;
         }
-        return proveedores;
+        return listaProveedores;
+    }
+
+    // Agregar un nuevo proveedor
+    public void agregarProveedor(Proveedor proveedor) throws SQLException {
+        String query = "INSERT INTO PROVEEDORES (ID, NOMBRE, CONTACTO, DIRECCION) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setLong(1, proveedor.getId()); // Usa setLong
+            statement.setString(2, proveedor.getNombre());
+            statement.setString(3, proveedor.getContacto());
+            statement.setString(4, proveedor.getDireccion());
+            statement.executeUpdate();
+        }
+    }
+
+    // Actualizar un proveedor existente
+    public void actualizarProveedor(Proveedor proveedor) throws SQLException {
+        String query = "UPDATE PROVEEDORES SET NOMBRE = ?, CONTACTO = ?, DIRECCION = ? WHERE ID = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, proveedor.getNombre());
+            statement.setString(2, proveedor.getContacto());
+            statement.setString(3, proveedor.getDireccion());
+            statement.setLong(4, proveedor.getId()); // Usa setLong
+            statement.executeUpdate();
+        }
+    }
+
+    // Eliminar un proveedor por ID
+    public void eliminarProveedor(long id) throws SQLException {
+        String query = "DELETE FROM PROVEEDORES WHERE ID = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setLong(1, id); // Usa setLong
+            statement.executeUpdate();
+        }
     }
 }
+

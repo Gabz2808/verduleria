@@ -93,7 +93,7 @@ public class add_productController {
         Proveedor proveedor = proveedorComboBox.getValue();
 
         // Agregar el producto a la base de datos
-        productoDAO.agregarProducto(new Producto(nombre, categoria.getId(), unidad.getId(), proveedor.getId()));
+        productoDAO.agregarProducto(new Producto(nombre, categoria.getId(), unidad.getId(), (int) proveedor.getId()));
 
         mostrarAlerta("Producto agregado exitosamente.");
     }

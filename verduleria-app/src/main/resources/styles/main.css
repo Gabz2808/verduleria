@@ -1,0 +1,131 @@
+/* General Configuration */
+.root {
+    -fx-font-family: 'Arial';
+    -fx-background-color: #F9F9F9; /* Color de fondo principal */
+    -fx-padding: 10;
+}
+
+/* Estilo para Labels */
+.label {
+    -fx-text-fill: #2C3E50; /* Texto en color oscuro */
+    -fx-font-size: 14px;
+}
+
+/* Títulos más grandes (aplicables opcionalmente) */
+.label-title {
+    -fx-text-fill: #34495E; /* Azul oscuro */
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+/* Botones */
+.button {
+    -fx-background-color: #34495E; /* Azul oscuro */
+    -fx-text-fill: white; /* Texto blanco */
+    -fx-font-size: 14px;
+    -fx-padding: 8 15 8 15;
+    -fx-background-radius: 5; /* Bordes redondeados */
+}
+
+.button:hover {
+    -fx-background-color: #2C3E50; /* Azul más oscuro al pasar el ratón */
+}
+
+.button:pressed {
+    -fx-background-color: #1A252F; /* Azul muy oscuro al presionar */
+}
+
+/* Botones de acción crítica (e.g., eliminar o salir) */
+.button-danger {
+    -fx-background-color: #C0392B; /* Rojo */
+    -fx-text-fill: white;
+}
+
+.button-danger:hover {
+    -fx-background-color: #A93226; /* Rojo oscuro al pasar el ratón */
+}
+
+.button-danger:pressed {
+    -fx-background-color: #8B2320; /* Rojo muy oscuro al presionar */
+}
+
+/* Estilo de TitledPane */
+.titled-pane > .title {
+    -fx-background-color: #34495E; /* Fondo del encabezado del TitledPane */
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 5;
+    -fx-font-weight: bold;
+}
+
+.titled-pane > .content {
+    -fx-padding: 10;
+    -fx-background-color: #FFFFFF; /* Fondo del contenido */
+    -fx-border-color: #D1D1D1;
+    -fx-border-width: 1;
+    -fx-border-radius: 5;
+}
+
+/* Estilo de las tablas */
+.table-view {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #D1D1D1;
+    -fx-border-width: 1;
+    -fx-border-radius: 5;
+    -fx-table-cell-border-color: #E1E1E1;
+    -fx-padding: 5;
+}
+
+.table-view .column-header {
+    -fx-background-color: #F2F2F2; /* Fondo de las cabeceras */
+    -fx-border-color: #CCCCCC;
+    -fx-font-weight: bold;
+}
+
+/* Celda de tabla */
+.table-cell {
+    -fx-padding: 8;
+    -fx-font-size: 13px;
+    -fx-text-fill: #2C3E50; /* Azul oscuro para texto */
+}
+
+/* TextFields */
+.text-field {
+    -fx-border-color: #BDC3C7; /* Gris claro */
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 5;
+    -fx-font-size: 14px;
+}
+
+.text-field:focused {
+    -fx-border-color: #34495E; /* Resaltar al enfocar */
+}
+
+/* Panel principal */
+.main-pane {
+    -fx-background-color: #FFFFFF; /* Fondo blanco por defecto */
+    -fx-padding: 20;
+    -fx-border-color: #D1D1D1;
+    -fx-border-width: 1;
+    -fx-border-radius: 5;
+}
+
+/* Header */
+.header {
+    -fx-background-color: #34495E;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-padding: 10 20 10 20;
+    -fx-font-weight: bold;
+}
+
+/* VBox y HBox */
+.vbox {
+    -fx-spacing: 10;
+}
+
+.hbox {
+    -fx-spacing: 10;
+    -fx-alignment: CENTER_LEFT;
+}
