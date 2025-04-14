@@ -7,6 +7,10 @@ public class Categoria {
     private String descripcion;
 
     // Constructor
+    public Categoria(){
+
+    }
+
     public Categoria(int id, String nombre, String descripcion) {
         this.id = id;
         this.nombre = nombre;

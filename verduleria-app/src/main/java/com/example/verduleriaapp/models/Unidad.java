@@ -11,6 +11,9 @@ public class Unidad {
         this.nombre = nombre;
     }
 
+    public Unidad(){
+
+    }
     // Getters y Setters
     public int getId() {
         return id;
