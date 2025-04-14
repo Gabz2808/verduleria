@@ -5,86 +5,81 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 public class GestionProveedoresController {
 
     @FXML
-    private AnchorPane anchorPaneProveedores;
-
-    @FXML
     private TableView<Proveedor> tablaProveedores;
-
     @FXML
-    private TableColumn<Proveedor, Integer> colId;
-
+    private TableColumn<Proveedor, Number> colId;
     @FXML
     private TableColumn<Proveedor, String> colNombre;
-
     @FXML
     private TableColumn<Proveedor, String> colContacto;
-
     @FXML
     private TableColumn<Proveedor, String> colDireccion;
-
     @FXML
     private TextField txtNombre;
-
     @FXML
     private TextField txtContacto;
-
     @FXML
     private TextField txtDireccion;
 
-    private ObservableList<Proveedor> listaProveedores;
+    private ObservableList<Proveedor> listaProveedores; // Lista que alimentará la tabla
 
     public void initialize() {
-        // Inicializar columnas de la tabla
-        colId.setCellValueFactory(data -> data.getValue().idProperty().asObject());
-        colNombre.setCellValueFactory(data -> data.getValue().nombreProperty());
-        colContacto.setCellValueFactory(data -> data.getValue().contactoProperty());
-        colDireccion.setCellValueFactory(data -> data.getValue().direccionProperty());
+        // Asignar propiedades a las columnas
+        colId.setCellValueFactory(cellData -> cellData.getValue().idProperty());
+        colNombre.setCellValueFactory(cellData -> cellData.getValue().nombreProperty());
+        colContacto.setCellValueFactory(cellData -> cellData.getValue().contactoProperty());
+        colDireccion.setCellValueFactory(cellData -> cellData.getValue().direccionProperty());
 
-        // Inicializar lista de proveedores
+        // Inicializar la lista de proveedores
         listaProveedores = FXCollections.observableArrayList();
+        cargarProveedores();
         tablaProveedores.setItems(listaProveedores);
     }
 
+    // Simular carga de datos
+    private void cargarProveedores() {
+        listaProveedores.add(new Proveedor(1, "Proveedor 1", "Contacto 1", "Dirección 1"));
+        listaProveedores.add(new Proveedor(2, "Proveedor 2", "Contacto 2", "Dirección 2"));
+        listaProveedores.add(new Proveedor(3, "Proveedor 3", "Contacto 3", "Dirección 3"));
+    }
+
     @FXML
-    private void onAgregarProveedor() {
+    private void handleAgregarProveedor() {
+        // Obtener valores del formulario
         String nombre = txtNombre.getText();
         String contacto = txtContacto.getText();
         String direccion = txtDireccion.getText();
 
-        // Supongamos que el ID es autogenerado
-        Proveedor nuevoProveedor = new Proveedor(listaProveedores.size() + 1, nombre, contacto, direccion);
-        listaProveedores.add(nuevoProveedor);
+        // Validar datos
+        if (nombre.isEmpty() || contacto.isEmpty() || direccion.isEmpty()) {
+            mostrarAlerta("Por favor, completa todos los campos.", Alert.AlertType.WARNING);
+            return;
+        }
+
+        // Agregar proveedor a la lista y a la tabla
+        listaProveedores.add(new Proveedor(listaProveedores.size() + 1, nombre, contacto, direccion));
         limpiarFormulario();
     }
 
+    // Método para limpiar los campos de texto
     @FXML
-    private void onEditarProveedor() {
-        Proveedor seleccionado = tablaProveedores.getSelectionModel().getSelectedItem();
-        if (seleccionado != null) {
-            seleccionado.setNombre(txtNombre.getText());
-            seleccionado.setContacto(txtContacto.getText());
-            seleccionado.setDireccion(txtDireccion.getText());
-            tablaProveedores.refresh();
-            limpiarFormulario();
-        }
-    }
-
-    @FXML
-    private void onEliminarProveedor() {
-        Proveedor seleccionado = tablaProveedores.getSelectionModel().getSelectedItem();
-        if (seleccionado != null) {
-            listaProveedores.remove(seleccionado);
-        }
-    }
-
     private void limpiarFormulario() {
         txtNombre.clear();
         txtContacto.clear();
         txtDireccion.clear();
-        tablaProveedores.getSelectionModel().clearSelection();
+    }
+
+    // Mostrar una alerta
+    private void mostrarAlerta(String mensaje, Alert.AlertType tipo) {
+        Alert alert = new Alert(tipo);
+        alert.setTitle("Mensaje");
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
     }
 }

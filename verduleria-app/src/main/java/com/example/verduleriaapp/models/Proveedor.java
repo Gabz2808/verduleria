@@ -1,55 +1,78 @@
 package com.example.verduleriaapp.models;
 
+import javafx.beans.property.*;
+
 public class Proveedor {
+    private LongProperty id; // Cambiado de int a long
+    private StringProperty nombre;
+    private StringProperty contacto;
+    private StringProperty direccion;
 
-    private int id;
-    private String nombre;
-    private String contacto;
-    private String direccion;
-
-    // Constructor
-    public Proveedor(int id, String nombre, String contacto, String direccion) {
-        this.id = id;
-        this.nombre = nombre;
-        this.contacto = contacto;
-        this.direccion = direccion;
+    // Constructor vacío
+    public Proveedor() {
+        this.id = new SimpleLongProperty();
+        this.nombre = new SimpleStringProperty();
+        this.contacto = new SimpleStringProperty();
+        this.direccion = new SimpleStringProperty();
     }
 
-    // Getters y Setters
-    public int getId() {
+    // Constructor con parámetros
+    public Proveedor(long id, String nombre, String contacto, String direccion) {
+        this.id = new SimpleLongProperty(id); // Cambiado de int a long
+        this.nombre = new SimpleStringProperty(nombre);
+        this.contacto = new SimpleStringProperty(contacto);
+        this.direccion = new SimpleStringProperty(direccion);
+    }
+
+    // Getters y setters para ID
+    public long getId() {
+        return id.get();
+    }
+
+    public void setId(long id) {
+        this.id.set(id);
+    }
+
+    public LongProperty idProperty() {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
+    // Getters y setters para Nombre
     public String getNombre() {
-        return nombre;
+        return nombre.get();
     }
 
     public void setNombre(String nombre) {
-        this.nombre = nombre;
+        this.nombre.set(nombre);
     }
 
+    public StringProperty nombreProperty() {
+        return nombre;
+    }
+
+    // Getters y setters para Contacto
     public String getContacto() {
-        return contacto;
+        return contacto.get();
     }
 
     public void setContacto(String contacto) {
-        this.contacto = contacto;
+        this.contacto.set(contacto);
     }
 
+    public StringProperty contactoProperty() {
+        return contacto;
+    }
+
+    // Getters y setters para Dirección
     public String getDireccion() {
-        return direccion;
+        return direccion.get();
     }
 
     public void setDireccion(String direccion) {
-        this.direccion = direccion;
+        this.direccion.set(direccion);
     }
 
-    @Override
-    public String toString() {
-        return nombre;  // Se mostrará solo el nombre en el ComboBox
+    public StringProperty direccionProperty() {
+        return direccion;
     }
 }

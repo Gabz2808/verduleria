@@ -5,17 +5,21 @@
 
 <AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.verduleriaapp.controllers.GestionProveedoresController">
     <children>
-        <TableView fx:id="tablaProveedores">
-            <columns>
-                <TableColumn fx:id="colId" text="ID" />
-                <TableColumn fx:id="colNombre" text="Nombre" />
-                <TableColumn fx:id="colContacto" text="Contacto" />
-                <TableColumn fx:id="colDireccion" text="Dirección" />
-            </columns>
-        </TableView>
-        <Button text="Agregar Proveedor" onAction="#handleAgregarProveedor"/>
-        <TextField fx:id="txtNombre" promptText="Nombre"/>
-        <TextField fx:id="txtContacto" promptText="Contacto"/>
-        <TextField fx:id="txtDireccion" promptText="Dirección"/>
+        <VBox alignment="CENTER" spacing="20.0">
+            <TableView fx:id="tablaProveedores">
+                <columns>
+                    <TableColumn fx:id="colId" text="ID" />
+                    <TableColumn fx:id="colNombre" text="Nombre" />
+                    <TableColumn fx:id="colContacto" text="Contacto" />
+                    <TableColumn fx:id="colDireccion" text="Dirección" />
+                </columns>
+            </TableView>
+            <HBox spacing="10.0" alignment="CENTER">
+                <TextField fx:id="txtNombre" promptText="Nombre"/>
+                <TextField fx:id="txtContacto" promptText="Contacto"/>
+                <TextField fx:id="txtDireccion" promptText="Dirección"/>
+                <Button text="Agregar Proveedor" onAction="#handleAgregarProveedor"/>
+            </HBox>
+        </VBox>
     </children>
 </AnchorPane>

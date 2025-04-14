@@ -42,7 +42,7 @@ public class HistorialPreciosDAO {
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     HistorialPrecios hp = new HistorialPrecios();
-                    hp.setIdHistorialPrecio(rs.getLong("ID_HISTORIAL_PRECIO"));
+                    hp.setIdHistorial(rs.getLong("IdHistorial"));
                     hp.setIdProducto(rs.getLong("ID_PRODUCTO"));
                     hp.setPrecioAnterior(rs.getDouble("PRECIO_ANTERIOR"));
                     hp.setPrecioNuevo(rs.getDouble("PRECIO_NUEVO"));

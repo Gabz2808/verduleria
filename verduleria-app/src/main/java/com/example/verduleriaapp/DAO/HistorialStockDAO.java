@@ -42,7 +42,7 @@ public class HistorialStockDAO {
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     HistorialStock hs = new HistorialStock();
-                    hs.setIdHistorialStock(rs.getLong("ID_HISTORIAL_STOCK"));
+                    hs.setIdHistorial(rs.getLong("IdHistorial"));
                     hs.setIdProducto(rs.getLong("ID_PRODUCTO"));
                     hs.setCantidadAnterior(rs.getInt("CANTIDAD_ANTERIOR"));
                     hs.setCantidadNueva(rs.getInt("CANTIDAD_NUEVA"));

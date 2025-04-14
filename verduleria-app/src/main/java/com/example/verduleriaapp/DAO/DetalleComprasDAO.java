@@ -1,9 +1,13 @@
 package com.example.verduleriaapp.DAO;
 
+import com.example.verduleriaapp.models.ComprasPorProveedor;
 import com.example.verduleriaapp.models.DetalleCompras;
+import com.example.verduleriaapp.models.ProductosMasComprados;
+import com.example.verduleriaapp.models.ResumenComprasPorFecha;
 import com.example.verduleriaapp.utils.ConexionOracle;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,5 +71,70 @@ public class DetalleComprasDAO {
             throw e;
         }
         return detalles;
+    }
+
+    public List<ResumenComprasPorFecha> obtenerResumenComprasPorFecha() throws SQLException {
+        List<ResumenComprasPorFecha> resumen = new ArrayList<>();
+        String sql = "SELECT * FROM VW_RESUMEN_COMPRAS_POR_FECHA";
+
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                LocalDate fechaCompra = rs.getDate("FECHA_COMPRA").toLocalDate();
+                Double totalDelDia = rs.getDouble("TOTAL_DEL_DIA");
+
+                ResumenComprasPorFecha r = new ResumenComprasPorFecha(fechaCompra, totalDelDia);
+                resumen.add(r);
+            }
+        } catch (SQLException e) {
+            System.err.println("❌ Error al obtener el resumen de compras por fecha: " + e.getMessage());
+            throw e;
+        }
+
+        return resumen;
+    }
+
+    public List<ProductosMasComprados> obtenerProductosMasComprados() throws SQLException {
+        List<ProductosMasComprados> productos = new ArrayList<>();
+        String sql = "SELECT * FROM VW_PRODUCTOS_MAS_COMPRADOS";
+
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                String producto = rs.getString("PRODUCTO");
+                Integer totalCantidad = rs.getInt("TOTAL_CANTIDAD");
+                Double totalVendido = rs.getDouble("TOTAL_VENDIDO");
+
+                ProductosMasComprados p = new ProductosMasComprados(producto, totalCantidad, totalVendido);
+                productos.add(p);
+            }
+        } catch (SQLException e) {
+            System.err.println("❌ Error al obtener los productos más comprados: " + e.getMessage());
+            throw e;
+        }
+
+        return productos;
+    }
+
+    public List<ComprasPorProveedor> obtenerComprasPorProveedor() throws SQLException {
+        List<ComprasPorProveedor> proveedores = new ArrayList<>();
+        String sql = "SELECT * FROM VW_COMPRAS_POR_PROVEEDOR";
+
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                String proveedor = rs.getString("PROVEEDOR");
+                Integer numeroCompras = rs.getInt("NUMERO_COMPRAS");
+                Double totalGastado = rs.getDouble("TOTAL_GASTADO");
+
+                ComprasPorProveedor p = new ComprasPorProveedor(proveedor, numeroCompras, totalGastado);
+                proveedores.add(p);
+            }
+        } catch (SQLException e) {
+            System.err.println("❌ Error al obtener compras por proveedor: " + e.getMessage());
+            throw e;
+        }
+
+        return proveedores;
     }
 }

@@ -42,7 +42,6 @@ public class PromocionesDAO {
             while (rs.next()) {
                 Promociones promocion = new Promociones();
                 promocion.setIdPromocion(rs.getLong("ID_PROMOCION"));
-                promocion.setDescripcion(rs.getString("DESCRIPCION"));
                 promocion.setDescuento(rs.getDouble("DESCUENTO"));
                 promocion.setFechaInicio(rs.getDate("FECHA_INICIO"));
                 promocion.setFechaFin(rs.getDate("FECHA_FIN"));
