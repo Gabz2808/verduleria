@@ -8,29 +8,72 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CategoriaDAO {
-
     private Connection connection;
 
     public CategoriaDAO() {
-        // Aquí deberías usar la conexión que ya tienes establecida, como la clase ConexionOracle
         this.connection = new ConexionOracle().getConnection();
+        if (this.connection == null) {
+            throw new RuntimeException("❌ Error al inicializar la conexión a la base de datos.");
+        }
+    }
+
+    public void crearCategoria(String nombre, String descripcion) throws SQLException {
+        String sql = "{call CREAR_CATEGORIA(?,?)}";
+
+        try (CallableStatement stmt = connection.prepareCall(sql)) {
+            stmt.setString(1, nombre);
+            stmt.setString(2, descripcion);
+            stmt.execute();
+        } catch (SQLException e) {
+            System.err.println("❌ Error al crear categoría: " + e.getMessage());
+            throw e;
+        }
+    }
+
+    public void eliminarCategoria(int idCategoria) throws SQLException {
+        String sql = "{call ELIMINAR_CATEGORIA(?)}";
+
+        try (CallableStatement stmt = connection.prepareCall(sql)) {
+            stmt.setInt(1, idCategoria);
+            stmt.execute();
+        } catch (SQLException e) {
+            System.err.println("❌ Error al eliminar categoría: " + e.getMessage());
+            throw e;
+        }
+    }
+
+    public void actualizarCategoria(int idCategoria, String nombre, String descripcion) throws SQLException {
+        String sql = "{call ACTUALIZAR_CATEGORIA(?,?,?)}";
+
+        try (CallableStatement stmt = connection.prepareCall(sql)) {
+            stmt.setInt(1, idCategoria);
+            stmt.setString(2, nombre);
+            stmt.setString(3, descripcion);
+            stmt.execute();
+        } catch (SQLException e) {
+            System.err.println("❌ Error al actualizar categoría: " + e.getMessage());
+            throw e;
+        }
     }
 
     public List<Categoria> obtenerCategorias() throws SQLException {
         List<Categoria> categorias = new ArrayList<>();
-        String query = "SELECT * FROM CATEGORIAS";  // Reemplaza "CATEGORIA" por el nombre correcto de tu tabla
+        String sql = "SELECT * FROM CATEGORIAS";
 
-        try (PreparedStatement stmt = connection.prepareStatement(query);
+        try (PreparedStatement stmt = connection.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
-                int id = rs.getInt("ID_CATEGORIA");
-                String nombre = rs.getString("NOMBRE");
-                String descripcion = rs.getString("DESCRIPCION");
-                categorias.add(new Categoria(id, nombre, descripcion));
+                Categoria c = new Categoria();
+                c.setId(rs.getInt("ID_CATEGORIA"));
+                c.setNombre(rs.getString("NOMBRE"));
+                c.setDescripcion(rs.getString("DESCRIPCION"));
+                categorias.add(c);
             }
+        } catch (SQLException e) {
+            System.err.println("❌ Error al obtener categorías: " + e.getMessage());
+            throw e;
         }
-
         return categorias;
     }
 }

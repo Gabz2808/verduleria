@@ -2,18 +2,18 @@ package com.example.verduleriaapp.models;
 
 import java.util.Objects;
 
-public class Cliente {
+public class Clientes {
     private Long idCliente; // Representa el campo ID_CLIENTE
     private String nombre; // Representa el campo NOMBRE
     private String contacto; // Representa el campo CONTACTO
     private String direccion; // Representa el campo DIRECCION
 
     // Constructor vacío
-    public Cliente() {
+    public Clientes() {
     }
 
     // Constructor con parámetros
-    public Cliente(Long idCliente, String nombre, String contacto, String direccion) {
+    public Clientes(Long idCliente, String nombre, String contacto, String direccion) {
         this.idCliente = idCliente;
         this.nombre = nombre;
         this.contacto = contacto;
@@ -58,8 +58,8 @@ public class Cliente {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Cliente cliente = (Cliente) o;
-        return Objects.equals(idCliente, cliente.idCliente);
+        Clientes clientes = (Clientes) o;
+        return Objects.equals(idCliente, clientes.idCliente);
     }
 
     @Override
