@@ -1,0 +1,39 @@
+<AnchorPane prefHeight="650.0" prefWidth="800.0"
+            xmlns="http://javafx.com/javafx/23.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.verduleriaapp.controllers.GestionOrdenesDeCompraController"
+            stylesheets="@../styles/main.css">
+
+    <children>
+        <Label layoutX="20.0" layoutY="20.0" text="Gestión de Vistas de Compras" />
+
+        <!-- Tabla para Resumen de Compras -->
+        <Label layoutX="20.0" layoutY="50.0" text="Resumen de Compras por Fecha" />
+        <TableView fx:id="tablaResumenCompras" layoutX="20.0" layoutY="70.0" prefHeight="150.0" prefWidth="760.0">
+            <columns>
+                <TableColumn fx:id="colFechaResumen" text="Fecha" prefWidth="200.0" />
+                <TableColumn fx:id="colTotalDia" text="Total del Día" prefWidth="200.0" />
+            </columns>
+        </TableView>
+
+        <!-- Tabla para Productos Más Comprados -->
+        <Label layoutX="20.0" layoutY="230.0" text="Productos Más Comprados" />
+        <TableView fx:id="tablaProductosMasComprados" layoutX="20.0" layoutY="250.0" prefHeight="150.0" prefWidth="760.0">
+            <columns>
+                <TableColumn fx:id="colProducto" text="Producto" prefWidth="250.0" />
+                <TableColumn fx:id="colCantidad" text="Cantidad Total" prefWidth="150.0" />
+                <TableColumn fx:id="colTotalVendido" text="Total Vendido" prefWidth="150.0" />
+            </columns>
+        </TableView>
+
+        <!-- Tabla para Compras por Proveedor -->
+        <Label layoutX="20.0" layoutY="410.0" text="Compras por Proveedor" />
+        <TableView fx:id="tablaComprasPorProveedor" layoutX="20.0" layoutY="430.0" prefHeight="150.0" prefWidth="760.0">
+            <columns>
+                <TableColumn fx:id="colProveedor" text="Proveedor" prefWidth="250.0" />
+                <TableColumn fx:id="colNumeroCompras" text="Número de Compras" prefWidth="150.0" />
+                <TableColumn fx:id="colTotalGastado" text="Total Gastado" prefWidth="150.0" />
+            </columns>
+        </TableView>
+    </children>
+</AnchorPane>
