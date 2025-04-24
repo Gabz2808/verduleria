@@ -1092,26 +1092,27 @@ AFTER INSERT ON USER_JAVA.DETALLE_VENTAS
 FOR EACH ROW
 BEGIN
   UPDATE USER_JAVA.Inventario
-  SET cantidad = cantidad - :new.cantidad
+  SET STOCK = STOCK - :new.CANTIDAD
   WHERE "ID_PRODUCTO" = :new.ID_PRODUCTO;
 END;
-/
 
+/
+ALTER TRIGGER "USER_JAVA"."ACTUALIZAR_STOCK_VENTA" ENABLE;
 --------------------------------------------------------
 --  DDL for Trigger ACTUALIZARTOTALVENTA
 --------------------------------------------------------
 
   CREATE OR REPLACE NONEDITIONABLE TRIGGER "USER_JAVA"."ACTUALIZARTOTALVENTA" 
-AFTER UPDATE ON Detalle_Ventas
+AFTER UPDATE ON USER_JAVA.Detalle_Ventas
 FOR EACH ROW
 DECLARE
   totalVenta DECIMAL(10,2);
 BEGIN
   SELECT SUM(precio_unitario * cantidad) INTO totalVenta
-  FROM Detalle_Ventas
+  FROM USER_JAVA.Detalle_Ventas
   WHERE id_venta = :new.id_venta;
 
-  UPDATE Ventas
+  UPDATE USER_JAVA.Ventas
   SET total = totalVenta
   WHERE id_venta = :new.id_venta;
 END;
@@ -1122,19 +1123,19 @@ ALTER TRIGGER "USER_JAVA"."ACTUALIZARTOTALVENTA" ENABLE;
 --------------------------------------------------------
 
   CREATE OR REPLACE NONEDITIONABLE TRIGGER "USER_JAVA"."GENERARALERTASTOCKMINIMO" 
-AFTER UPDATE ON Inventario
+AFTER UPDATE ON USER_JAVA.Inventario
 FOR EACH ROW
 DECLARE
   stock_minimo NUMBER;
 BEGIN
   -- Obtener el valor de stock_minimo
   SELECT stock_minimo INTO stock_minimo
-  FROM Productos
+  FROM USER_JAVA.Productos
   WHERE id_producto = :new.id_producto;
 
   -- Verificar si el stock es bajo
-  IF :new.cantidad < stock_minimo THEN
-    INSERT INTO Alertas (tipo, mensaje)
+  IF :new.STOCK < stock_minimo THEN
+    INSERT INTO USER_JAVA.Alertas (tipo, mensaje)
     VALUES ('Stock Bajo', 'El stock del producto ' || :new.id_producto || ' es bajo');
   END IF;
 END;
@@ -1145,7 +1146,7 @@ ALTER TRIGGER "USER_JAVA"."GENERARALERTASTOCKMINIMO" ENABLE;
 --------------------------------------------------------
 
   CREATE OR REPLACE NONEDITIONABLE TRIGGER "USER_JAVA"."TRG_ACTUALIZAR_HISTORIAL_STOCK_COMPRA" 
-AFTER INSERT ON Detalle_Compras
+AFTER INSERT ON USER_JAVA.Detalle_Compras
 FOR EACH ROW
 DECLARE
     v_cantidad_actual NUMBER := 0; -- Inicializar en 0 para nuevos productos
@@ -1154,7 +1155,7 @@ BEGIN
         -- Obtener la cantidad más reciente del historial para el producto
         SELECT cantidad_nueva
         INTO v_cantidad_actual
-        FROM Historial_Stock
+        FROM USER_JAVA.Historial_Stock
         WHERE id_producto = :NEW.ID_PRODUCTO
         AND ROWNUM = 1
         ORDER BY fecha_cambio DESC;
@@ -1179,7 +1180,7 @@ ALTER TRIGGER "USER_JAVA"."TRG_ACTUALIZAR_HISTORIAL_STOCK_COMPRA" ENABLE;
 --------------------------------------------------------
 
   CREATE OR REPLACE NONEDITIONABLE TRIGGER "USER_JAVA"."TRG_ACTUALIZAR_HISTORIAL_STOCK_DEVOLUCION" 
-AFTER INSERT ON Devoluciones
+AFTER INSERT ON USER_JAVA.Devoluciones
 FOR EACH ROW
 DECLARE
     v_cantidad_actual NUMBER := 0; -- Inicializamos en 0 para manejar productos nuevos
@@ -1188,7 +1189,7 @@ BEGIN
         -- Obtener la cantidad más reciente del historial del producto
         SELECT cantidad_nueva
         INTO v_cantidad_actual
-        FROM Historial_Stock
+        FROM USER_JAVA.Historial_Stock
         WHERE id_producto = :NEW.ID_PRODUCTO
         AND ROWNUM = 1
         ORDER BY fecha_cambio DESC;
@@ -1202,7 +1203,7 @@ BEGIN
     v_cantidad_actual := v_cantidad_actual + :NEW.CANTIDAD;
 
     -- Insertar un registro en Historial_Stock reflejando el cambio
-    INSERT INTO Historial_Stock (id_producto, cantidad_anterior, cantidad_nueva, fecha_cambio)
+    INSERT INTO USER_JAVA.Historial_Stock (id_producto, cantidad_anterior, cantidad_nueva, fecha_cambio)
     VALUES (:NEW.ID_PRODUCTO, v_cantidad_actual - :NEW.CANTIDAD, v_cantidad_actual, SYSDATE);
 END;
 
@@ -1213,7 +1214,7 @@ ALTER TRIGGER "USER_JAVA"."TRG_ACTUALIZAR_HISTORIAL_STOCK_DEVOLUCION" ENABLE;
 --------------------------------------------------------
 
   CREATE OR REPLACE NONEDITIONABLE TRIGGER "USER_JAVA"."TRG_ACTUALIZAR_HISTORIAL_STOCK_VENTA" 
-AFTER INSERT ON Detalle_Ventas
+AFTER INSERT ON USER_JAVA.Detalle_Ventas
 FOR EACH ROW
 DECLARE
     v_cantidad_actual NUMBER := 0; -- Inicializamos en 0 para evitar problemas con productos nuevos
@@ -1222,7 +1223,7 @@ BEGIN
         -- Obtener la cantidad más reciente del historial del producto
         SELECT cantidad_nueva
         INTO v_cantidad_actual
-        FROM Historial_Stock
+        FROM USER_JAVA.Historial_Stock
         WHERE id_producto = :NEW.ID_PRODUCTO
         AND ROWNUM = 1
         ORDER BY fecha_cambio DESC;
@@ -1241,7 +1242,7 @@ BEGIN
     v_cantidad_actual := v_cantidad_actual - :NEW.CANTIDAD;
 
     -- Insertar un registro en Historial_Stock reflejando el cambio
-    INSERT INTO Historial_Stock (id_producto, cantidad_anterior, cantidad_nueva, fecha_cambio)
+    INSERT INTO USER_JAVA.Historial_Stock (id_producto, cantidad_anterior, cantidad_nueva, fecha_cambio)
     VALUES (:NEW.ID_PRODUCTO, v_cantidad_actual + :NEW.CANTIDAD, v_cantidad_actual, SYSDATE);
 END;
 
@@ -1252,11 +1253,11 @@ ALTER TRIGGER "USER_JAVA"."TRG_ACTUALIZAR_HISTORIAL_STOCK_VENTA" ENABLE;
 --------------------------------------------------------
 
   CREATE OR REPLACE NONEDITIONABLE TRIGGER "USER_JAVA"."TRG_AFTER_DELETE_PRODUCTOS_LOG" 
-AFTER DELETE ON "USER_JAVA"."PRODUCTOS"
+AFTER DELETE ON USER_JAVA.PRODUCTOS
 FOR EACH ROW
 BEGIN
-    INSERT INTO "USER_JAVA"."LOGS" (id_log, id_usuario, accion, fecha)
-    VALUES ("USER_JAVA"."ISEQ$$_76635".nextval,
+    INSERT INTO USER_JAVA.LOGS (id_log, id_usuario, accion, fecha)
+    VALUES ("USER_JAVA"."ISEQ$$_76634".nextval,
             NULL,
             'DELETE en PRODUCTOS (ID: ' || :OLD.id_producto || ', Nombre: ' || :OLD.nombre || ')',
             SYSDATE);
@@ -1269,11 +1270,11 @@ ALTER TRIGGER "USER_JAVA"."TRG_AFTER_DELETE_PRODUCTOS_LOG" ENABLE;
 --------------------------------------------------------
 
   CREATE OR REPLACE NONEDITIONABLE TRIGGER "USER_JAVA"."TRG_AFTER_INSERT_PRODUCTOS_LOG" 
-AFTER INSERT ON "USER_JAVA"."PRODUCTOS"
+AFTER INSERT ON USER_JAVA.PRODUCTOS
 FOR EACH ROW
 BEGIN
-    INSERT INTO "USER_JAVA"."LOGS" (id_log, id_usuario, accion, fecha)
-    VALUES ("USER_JAVA"."ISEQ$$_76635".nextval,
+    INSERT INTO USER_JAVA.LOGS (id_log, id_usuario, accion, fecha)
+    VALUES ("USER_JAVA"."ISEQ$$_76634".nextval,
             -- Asume que tienes una forma de identificar el usuario que realiza la acción
             -- Esto podría ser una variable de sesión, una función de contexto, etc.
             -- Para este ejemplo, lo dejaremos como NULL.
@@ -1289,11 +1290,11 @@ ALTER TRIGGER "USER_JAVA"."TRG_AFTER_INSERT_PRODUCTOS_LOG" ENABLE;
 --------------------------------------------------------
 
   CREATE OR REPLACE NONEDITIONABLE TRIGGER "USER_JAVA"."TRG_AFTER_INSERT_VENTAS_LOG" 
-AFTER INSERT ON "USER_JAVA"."VENTAS"
+AFTER INSERT ON USER_JAVA.VENTAS
 FOR EACH ROW
 BEGIN
-    INSERT INTO "USER_JAVA"."LOGS" (id_log, id_usuario, accion, fecha)
-    VALUES ("USER_JAVA"."ISEQ$$_76635".nextval,
+    INSERT INTO USER_JAVA.LOGS (id_log, id_usuario, accion, fecha)
+    VALUES ("USER_JAVA"."ISEQ$$_76634".nextval,
             NULL,
             'INSERT en VENTAS (ID: ' || :NEW.id_venta || ', Cliente: ' || :NEW.id_cliente || ', Total: ' || :NEW.total || ')',
             SYSDATE);
@@ -1306,7 +1307,7 @@ ALTER TRIGGER "USER_JAVA"."TRG_AFTER_INSERT_VENTAS_LOG" ENABLE;
 --------------------------------------------------------
 
   CREATE OR REPLACE NONEDITIONABLE TRIGGER "USER_JAVA"."TRG_AFTER_IU_INVENTARIO_BAJO_STOCK" 
-AFTER INSERT OR UPDATE ON "USER_JAVA"."INVENTARIO"
+AFTER INSERT OR UPDATE ON USER_JAVA.INVENTARIO
 FOR EACH ROW
 DECLARE
     v_umbral_bajo_stock NUMBER := 10; -- Define el umbral de bajo stock
@@ -1317,12 +1318,12 @@ BEGIN
         -- Obtener el nombre del producto
         SELECT nombre
         INTO v_nombre_producto
-        FROM "USER_JAVA"."PRODUCTOS"
+        FROM USER_JAVA.PRODUCTOS
         WHERE id_producto = :NEW.id_producto;
 
         -- Insertar la alerta
-        INSERT INTO "USER_JAVA"."ALERTAS" (id_alerta, tipo, mensaje, fecha)
-        VALUES ("USER_JAVA"."ISEQ$$_76611".nextval,
+        INSERT INTO USER_JAVA.ALERTAS (id_alerta, tipo, mensaje, fecha)
+        VALUES ("USER_JAVA"."ISEQ$$_76631".nextval,
                 'Bajo Stock',
                 'El producto ' || v_nombre_producto || ' tiene un stock de ' || :NEW.stock || ' unidades.',
                 SYSDATE);
@@ -1341,11 +1342,11 @@ ALTER TRIGGER "USER_JAVA"."TRG_AFTER_IU_INVENTARIO_BAJO_STOCK" ENABLE;
 --------------------------------------------------------
 
   CREATE OR REPLACE NONEDITIONABLE TRIGGER "USER_JAVA"."TRG_AFTER_UPDATE_PRODUCTOS_LOG" 
-AFTER UPDATE ON "USER_JAVA"."PRODUCTOS"
+AFTER UPDATE ON USER_JAVA.PRODUCTOS
 FOR EACH ROW
 BEGIN
-    INSERT INTO "USER_JAVA"."LOGS" (id_log, id_usuario, accion, fecha)
-    VALUES ("USER_JAVA"."ISEQ$$_76635".nextval,
+    INSERT INTO USER_JAVA.LOGS (id_log, id_usuario, accion, fecha)
+    VALUES ("USER_JAVA"."ISEQ$$_76634".nextval,
             NULL,
             'UPDATE en PRODUCTOS (ID: ' || :NEW.id_producto || ') - Nombre ANTES: ' || :OLD.nombre || ', AHORA: ' || :NEW.nombre,
             SYSDATE);
@@ -1359,11 +1360,11 @@ ALTER TRIGGER "USER_JAVA"."TRG_AFTER_UPDATE_PRODUCTOS_LOG" ENABLE;
 --------------------------------------------------------
 
   CREATE OR REPLACE NONEDITIONABLE TRIGGER "USER_JAVA"."TRG_AUDITORIA_DETALLE_COMPRAS" 
-AFTER INSERT OR UPDATE OR DELETE ON DETALLE_COMPRAS
+AFTER INSERT OR UPDATE OR DELETE ON USER_JAVA.DETALLE_COMPRAS
 FOR EACH ROW
 BEGIN
     IF INSERTING THEN
-        INSERT INTO AUDITORIA_DETALLE_COMPRAS (
+        INSERT INTO USER_JAVA.AUDITORIA_DETALLE_COMPRAS (
             ID_AUDITORIA, ID_DETALLE_COMPRA, OPERACION, 
             CANTIDAD_ACTUAL, PRECIO_UNITARIO_ACTUAL
         ) VALUES (
@@ -1371,7 +1372,7 @@ BEGIN
             :NEW.CANTIDAD, :NEW.PRECIO_UNITARIO
         );
     ELSIF UPDATING THEN
-        INSERT INTO AUDITORIA_DETALLE_COMPRAS (
+        INSERT INTO USER_JAVA.AUDITORIA_DETALLE_COMPRAS (
             ID_AUDITORIA, ID_DETALLE_COMPRA, OPERACION, 
             CANTIDAD_ANTERIOR, PRECIO_UNITARIO_ANTERIOR,
             CANTIDAD_ACTUAL, PRECIO_UNITARIO_ACTUAL
@@ -1381,7 +1382,7 @@ BEGIN
             :NEW.CANTIDAD, :NEW.PRECIO_UNITARIO
         );
     ELSIF DELETING THEN
-        INSERT INTO AUDITORIA_DETALLE_COMPRAS (
+        INSERT INTO USER_JAVA.AUDITORIA_DETALLE_COMPRAS (
             ID_AUDITORIA, ID_DETALLE_COMPRA, OPERACION, 
             CANTIDAD_ANTERIOR, PRECIO_UNITARIO_ANTERIOR
         ) VALUES (
@@ -1398,7 +1399,7 @@ ALTER TRIGGER "USER_JAVA"."TRG_AUDITORIA_DETALLE_COMPRAS" ENABLE;
 --------------------------------------------------------
 
   CREATE OR REPLACE NONEDITIONABLE TRIGGER "USER_JAVA"."TRG_BEFORE_INSERT_PRODUCT" 
-BEFORE INSERT ON "USER_JAVA"."PRODUCTOS"
+BEFORE INSERT ON USER_JAVA.PRODUCTOS
 BEGIN
     IF NOT FN_CAN_ADD_PRODUCT THEN
         RAISE_APPLICATION_ERROR(-20001, 'No se puede agregar un producto. No hay inventarios disponibles.');
@@ -1411,43 +1412,46 @@ ALTER TRIGGER "USER_JAVA"."TRG_BEFORE_INSERT_PRODUCT" ENABLE;
 --  DDL for Trigger TRG_INVENTARIO_LLENO
 --------------------------------------------------------
 
-  CREATE OR REPLACE NONEDITIONABLE TRIGGER "USER_JAVA"."TRG_INVENTARIO_LLENO" 
-AFTER INSERT OR UPDATE ON Historial_Stock
+CREATE OR REPLACE NONEDITIONABLE TRIGGER "USER_JAVA"."TRG_INVENTARIO_LLENO" 
+AFTER INSERT OR UPDATE ON USER_JAVA.Historial_Stock
 FOR EACH ROW
+DECLARE
+    v_capacidad_maxima NUMBER;
 BEGIN
-    DECLARE v_capacidad_maxima NUMBER;
-
     -- Obtener la capacidad máxima permitida para el inventario del producto
     SELECT stock
     INTO v_capacidad_maxima
-    FROM Inventario
-    WHERE id_inventario = (SELECT id_inventario FROM Productos WHERE id_producto = :NEW.id_producto);
+    FROM USER_JAVA.Inventario
+    WHERE id_inventario = (
+        SELECT id_inventario FROM USER_JAVA.Productos WHERE id_producto = :NEW.id_producto
+    );
 
     -- Comprobar si el stock disponible supera o iguala la capacidad máxima
     IF :NEW.cantidad_nueva >= v_capacidad_maxima THEN
         -- Registrar un aviso en los logs
-        INSERT INTO Logs (descripcion, fecha_evento)
-        VALUES (CONCAT('El inventario del producto con ID ', :NEW.id_producto, ' está lleno o excedido.'), SYSDATE);
+        INSERT INTO USER_JAVA.Logs (ACCION, FECHA)
+        VALUES (
+            'El inventario del producto con ID ' || :NEW.id_producto || ' está lleno o excedido.',
+            SYSDATE
+        );
     END IF;
 END;
-$$
-
-DELIMITER ;
 /
+
 ALTER TRIGGER "USER_JAVA"."TRG_INVENTARIO_LLENO" ENABLE;
 --------------------------------------------------------
 --  DDL for Trigger TRG_UPDATE_TOTAL_COMPRA
 --------------------------------------------------------
 
   CREATE OR REPLACE NONEDITIONABLE TRIGGER "USER_JAVA"."TRG_UPDATE_TOTAL_COMPRA" 
-AFTER INSERT OR UPDATE OR DELETE ON DETALLE_COMPRAS
+AFTER INSERT OR UPDATE OR DELETE ON USER_JAVA.DETALLE_COMPRAS
 FOR EACH ROW
 BEGIN
     -- Actualizar el TOTAL en la tabla COMPRAS después de cualquier cambio en DETALLE_COMPRAS
-    UPDATE COMPRAS C
+    UPDATE USER_JAVA.COMPRAS C
     SET C.TOTAL = (
         SELECT SUM(DC.CANTIDAD * DC.PRECIO_UNITARIO)
-        FROM DETALLE_COMPRAS DC
+        FROM USER_JAVA.DETALLE_COMPRAS DC
         WHERE DC.ID_COMPRA = C.ID_COMPRA
     )
     WHERE C.ID_COMPRA = :OLD.ID_COMPRA OR C.ID_COMPRA = :NEW.ID_COMPRA;
@@ -1460,15 +1464,15 @@ ALTER TRIGGER "USER_JAVA"."TRG_UPDATE_TOTAL_COMPRA" ENABLE;
 --------------------------------------------------------
 
   CREATE OR REPLACE NONEDITIONABLE TRIGGER "USER_JAVA"."TRG_VALIDAR_STOCK" 
-BEFORE INSERT OR UPDATE ON DETALLE_COMPRAS
+BEFORE INSERT OR UPDATE ON USER_JAVA.DETALLE_COMPRAS
 FOR EACH ROW
 DECLARE
     V_STOCK_DISPONIBLE NUMBER;
 BEGIN
     -- Obtener el stock disponible del producto
-    SELECT STOCK_DISPONIBLE
+    SELECT USER_JAVA.STOCK_DISPONIBLE
     INTO V_STOCK_DISPONIBLE
-    FROM INVENTARIO
+    FROM USER_JAVA.INVENTARIO
     WHERE ID_PRODUCTO = :NEW.ID_PRODUCTO;
 
     -- Validar si la cantidad supera el stock disponible
@@ -1485,14 +1489,14 @@ ALTER TRIGGER "USER_JAVA"."TRG_VALIDAR_STOCK" ENABLE;
 --------------------------------------------------------
 
   CREATE OR REPLACE NONEDITIONABLE TRIGGER "USER_JAVA"."TRG_UPDATE_TOTAL_COMPRA" 
-AFTER INSERT OR UPDATE OR DELETE ON DETALLE_COMPRAS
+AFTER INSERT OR UPDATE OR DELETE ON USER_JAVA.DETALLE_COMPRAS
 FOR EACH ROW
 BEGIN
     -- Actualizar el TOTAL en la tabla COMPRAS después de cualquier cambio en DETALLE_COMPRAS
-    UPDATE COMPRAS C
+    UPDATE USER_JAVA.COMPRAS C
     SET C.TOTAL = (
         SELECT SUM(DC.CANTIDAD * DC.PRECIO_UNITARIO)
-        FROM DETALLE_COMPRAS DC
+        FROM USER_JAVA.DETALLE_COMPRAS DC
         WHERE DC.ID_COMPRA = C.ID_COMPRA
     )
     WHERE C.ID_COMPRA = :OLD.ID_COMPRA OR C.ID_COMPRA = :NEW.ID_COMPRA;
@@ -1505,15 +1509,15 @@ ALTER TRIGGER "USER_JAVA"."TRG_UPDATE_TOTAL_COMPRA" ENABLE;
 --------------------------------------------------------
 
   CREATE OR REPLACE NONEDITIONABLE TRIGGER "USER_JAVA"."TRG_VALIDAR_STOCK" 
-BEFORE INSERT OR UPDATE ON DETALLE_COMPRAS
+BEFORE INSERT OR UPDATE ON USER_JAVA.DETALLE_COMPRAS
 FOR EACH ROW
 DECLARE
     V_STOCK_DISPONIBLE NUMBER;
 BEGIN
     -- Obtener el stock disponible del producto
-    SELECT STOCK_DISPONIBLE
+    SELECT STOCK
     INTO V_STOCK_DISPONIBLE
-    FROM INVENTARIO
+    FROM USER_JAVA.INVENTARIO
     WHERE ID_PRODUCTO = :NEW.ID_PRODUCTO;
 
     -- Validar si la cantidad supera el stock disponible
@@ -1530,11 +1534,11 @@ ALTER TRIGGER "USER_JAVA"."TRG_VALIDAR_STOCK" ENABLE;
 --------------------------------------------------------
 
   CREATE OR REPLACE NONEDITIONABLE TRIGGER "USER_JAVA"."TRG_AUDITORIA_DETALLE_COMPRAS" 
-AFTER INSERT OR UPDATE OR DELETE ON DETALLE_COMPRAS
+AFTER INSERT OR UPDATE OR DELETE ON USER_JAVA.DETALLE_COMPRAS
 FOR EACH ROW
 BEGIN
     IF INSERTING THEN
-        INSERT INTO AUDITORIA_DETALLE_COMPRAS (
+        INSERT INTO USER_JAVA.AUDITORIA_DETALLE_COMPRAS (
             ID_AUDITORIA, ID_DETALLE_COMPRA, OPERACION, 
             CANTIDAD_ACTUAL, PRECIO_UNITARIO_ACTUAL
         ) VALUES (
@@ -1542,7 +1546,7 @@ BEGIN
             :NEW.CANTIDAD, :NEW.PRECIO_UNITARIO
         );
     ELSIF UPDATING THEN
-        INSERT INTO AUDITORIA_DETALLE_COMPRAS (
+        INSERT INTO USER_JAVA.AUDITORIA_DETALLE_COMPRAS (
             ID_AUDITORIA, ID_DETALLE_COMPRA, OPERACION, 
             CANTIDAD_ANTERIOR, PRECIO_UNITARIO_ANTERIOR,
             CANTIDAD_ACTUAL, PRECIO_UNITARIO_ACTUAL
@@ -1552,7 +1556,7 @@ BEGIN
             :NEW.CANTIDAD, :NEW.PRECIO_UNITARIO
         );
     ELSIF DELETING THEN
-        INSERT INTO AUDITORIA_DETALLE_COMPRAS (
+        INSERT INTO USER_JAVA.AUDITORIA_DETALLE_COMPRAS (
             ID_AUDITORIA, ID_DETALLE_COMPRA, OPERACION, 
             CANTIDAD_ANTERIOR, PRECIO_UNITARIO_ANTERIOR
         ) VALUES (
@@ -1569,7 +1573,7 @@ ALTER TRIGGER "USER_JAVA"."TRG_AUDITORIA_DETALLE_COMPRAS" ENABLE;
 --------------------------------------------------------
 
   CREATE OR REPLACE NONEDITIONABLE TRIGGER "USER_JAVA"."TRG_ACTUALIZAR_HISTORIAL_STOCK_COMPRA" 
-AFTER INSERT ON Detalle_Compras
+AFTER INSERT ON USER_JAVA.Detalle_Compras
 FOR EACH ROW
 DECLARE
     v_cantidad_actual NUMBER := 0; -- Inicializar en 0 para nuevos productos
@@ -1578,7 +1582,7 @@ BEGIN
         -- Obtener la cantidad más reciente del historial para el producto
         SELECT cantidad_nueva
         INTO v_cantidad_actual
-        FROM Historial_Stock
+        FROM USER_JAVA.Historial_Stock
         WHERE id_producto = :NEW.ID_PRODUCTO
         AND ROWNUM = 1
         ORDER BY fecha_cambio DESC;
@@ -1592,7 +1596,7 @@ BEGIN
     v_cantidad_actual := v_cantidad_actual + :NEW.CANTIDAD;
 
     -- Agregar un registro en el historial del stock
-    INSERT INTO Historial_Stock (id_producto, cantidad_anterior, cantidad_nueva, fecha_cambio)
+    INSERT INTO USER_JAVA.Historial_Stock (id_producto, cantidad_anterior, cantidad_nueva, fecha_cambio)
     VALUES (:NEW.ID_PRODUCTO, v_cantidad_actual - :NEW.CANTIDAD, v_cantidad_actual, SYSDATE);
 END;
 
@@ -1602,281 +1606,18 @@ ALTER TRIGGER "USER_JAVA"."TRG_ACTUALIZAR_HISTORIAL_STOCK_COMPRA" ENABLE;
 --  DDL for Trigger ACTUALIZARTOTALVENTA
 --------------------------------------------------------
 
-  CREATE OR REPLACE NONEDITIONABLE TRIGGER "USER_JAVA"."ACTUALIZARTOTALVENTA" 
-AFTER UPDATE ON Detalle_Ventas
-FOR EACH ROW
-DECLARE
-  totalVenta DECIMAL(10,2);
-BEGIN
-  SELECT SUM(precio_unitario * cantidad) INTO totalVenta
-  FROM Detalle_Ventas
-  WHERE id_venta = :new.id_venta;
-
-  UPDATE Ventas
-  SET total = totalVenta
-  WHERE id_venta = :new.id_venta;
-END;
-/
-ALTER TRIGGER "USER_JAVA"."ACTUALIZARTOTALVENTA" ENABLE;
---------------------------------------------------------
---  DDL for Trigger ACTUALIZARSTOCKVENTA
---------------------------------------------------------
-
-  CREATE OR REPLACE NONEDITIONABLE TRIGGER "USER_JAVA"."ACTUALIZARSTOCKVENTA" 
-AFTER INSERT ON Detalle_Ventas
+  create or replace NONEDITIONABLE TRIGGER "USER_JAVA"."ACTUALIZARSTOCKVENTA" 
+AFTER INSERT ON USER_JAVA.Detalle_Ventas
 FOR EACH ROW
 BEGIN
-  UPDATE Inventario
-  SET cantidad = cantidad - :new.cantidad
+  UPDATE USER_JAVA.Inventario
+  SET STOCK = STOCK - :new.cantidad
   WHERE id_producto = :new.id_producto;
 END;
+
 /
 ALTER TRIGGER "USER_JAVA"."ACTUALIZARSTOCKVENTA" ENABLE;
---------------------------------------------------------
---  DDL for Trigger TRG_ACTUALIZAR_HISTORIAL_STOCK_VENTA
---------------------------------------------------------
 
-  CREATE OR REPLACE NONEDITIONABLE TRIGGER "USER_JAVA"."TRG_ACTUALIZAR_HISTORIAL_STOCK_VENTA" 
-AFTER INSERT ON Detalle_Ventas
-FOR EACH ROW
-DECLARE
-    v_cantidad_actual NUMBER := 0; -- Inicializamos en 0 para evitar problemas con productos nuevos
-BEGIN
-    BEGIN
-        -- Obtener la cantidad más reciente del historial del producto
-        SELECT cantidad_nueva
-        INTO v_cantidad_actual
-        FROM Historial_Stock
-        WHERE id_producto = :NEW.ID_PRODUCTO
-        AND ROWNUM = 1
-        ORDER BY fecha_cambio DESC;
-    EXCEPTION
-        -- Si no existe registro previo para el producto, asumimos que la cantidad inicial es 0
-        WHEN NO_DATA_FOUND THEN
-            v_cantidad_actual := 0;
-    END;
-
-    -- Verificar que no se reduzca la cantidad por debajo de 0
-    IF v_cantidad_actual < :NEW.CANTIDAD THEN
-        RAISE_APPLICATION_ERROR(-20001, 'ERROR: No hay suficiente stock disponible para completar la venta.');
-    END IF;
-
-    -- Calcular la nueva cantidad en el historial tras la venta
-    v_cantidad_actual := v_cantidad_actual - :NEW.CANTIDAD;
-
-    -- Insertar un registro en Historial_Stock reflejando el cambio
-    INSERT INTO Historial_Stock (id_producto, cantidad_anterior, cantidad_nueva, fecha_cambio)
-    VALUES (:NEW.ID_PRODUCTO, v_cantidad_actual + :NEW.CANTIDAD, v_cantidad_actual, SYSDATE);
-END;
-
-/
-ALTER TRIGGER "USER_JAVA"."TRG_ACTUALIZAR_HISTORIAL_STOCK_VENTA" ENABLE;
---------------------------------------------------------
---  DDL for Trigger TRG_ACTUALIZAR_HISTORIAL_STOCK_DEVOLUCION
---------------------------------------------------------
-
-  CREATE OR REPLACE NONEDITIONABLE TRIGGER "USER_JAVA"."TRG_ACTUALIZAR_HISTORIAL_STOCK_DEVOLUCION" 
-AFTER INSERT ON Devoluciones
-FOR EACH ROW
-DECLARE
-    v_cantidad_actual NUMBER := 0; -- Inicializamos en 0 para manejar productos nuevos
-BEGIN
-    BEGIN
-        -- Obtener la cantidad más reciente del historial del producto
-        SELECT cantidad_nueva
-        INTO v_cantidad_actual
-        FROM Historial_Stock
-        WHERE id_producto = :NEW.ID_PRODUCTO
-        AND ROWNUM = 1
-        ORDER BY fecha_cambio DESC;
-    EXCEPTION
-        -- Si no existe registro previo para el producto, asumimos que la cantidad inicial es 0
-        WHEN NO_DATA_FOUND THEN
-            v_cantidad_actual := 0;
-    END;
-
-    -- Calcular la nueva cantidad en el historial tras la devolución
-    v_cantidad_actual := v_cantidad_actual + :NEW.CANTIDAD;
-
-    -- Insertar un registro en Historial_Stock reflejando el cambio
-    INSERT INTO Historial_Stock (id_producto, cantidad_anterior, cantidad_nueva, fecha_cambio)
-    VALUES (:NEW.ID_PRODUCTO, v_cantidad_actual - :NEW.CANTIDAD, v_cantidad_actual, SYSDATE);
-END;
-
-/
-ALTER TRIGGER "USER_JAVA"."TRG_ACTUALIZAR_HISTORIAL_STOCK_DEVOLUCION" ENABLE;
---------------------------------------------------------
---  DDL for Trigger TRG_INVENTARIO_LLENO
---------------------------------------------------------
-
-  CREATE OR REPLACE NONEDITIONABLE TRIGGER "USER_JAVA"."TRG_INVENTARIO_LLENO" 
-AFTER INSERT OR UPDATE ON Historial_Stock
-FOR EACH ROW
-BEGIN
-    DECLARE v_capacidad_maxima NUMBER;
-
-    -- Obtener la capacidad máxima permitida para el inventario del producto
-    SELECT stock
-    INTO v_capacidad_maxima
-    FROM Inventario
-    WHERE id_inventario = (SELECT id_inventario FROM Productos WHERE id_producto = :NEW.id_producto);
-
-    -- Comprobar si el stock disponible supera o iguala la capacidad máxima
-    IF :NEW.cantidad_nueva >= v_capacidad_maxima THEN
-        -- Registrar un aviso en los logs
-        INSERT INTO Logs (descripcion, fecha_evento)
-        VALUES (CONCAT('El inventario del producto con ID ', :NEW.id_producto, ' está lleno o excedido.'), SYSDATE);
-    END IF;
-END;
-$$
-
-DELIMITER ;
-/
-ALTER TRIGGER "USER_JAVA"."TRG_INVENTARIO_LLENO" ENABLE;
---------------------------------------------------------
---  DDL for Trigger GENERARALERTASTOCKMINIMO
---------------------------------------------------------
-
-  CREATE OR REPLACE NONEDITIONABLE TRIGGER "USER_JAVA"."GENERARALERTASTOCKMINIMO" 
-AFTER UPDATE ON Inventario
-FOR EACH ROW
-DECLARE
-  stock_minimo NUMBER;
-BEGIN
-  -- Obtener el valor de stock_minimo
-  SELECT stock_minimo INTO stock_minimo
-  FROM Productos
-  WHERE id_producto = :new.id_producto;
-
-  -- Verificar si el stock es bajo
-  IF :new.cantidad < stock_minimo THEN
-    INSERT INTO Alertas (tipo, mensaje)
-    VALUES ('Stock Bajo', 'El stock del producto ' || :new.id_producto || ' es bajo');
-  END IF;
-END;
-/
-ALTER TRIGGER "USER_JAVA"."GENERARALERTASTOCKMINIMO" ENABLE;
---------------------------------------------------------
---  DDL for Trigger TRG_AFTER_IU_INVENTARIO_BAJO_STOCK
---------------------------------------------------------
-
-  CREATE OR REPLACE NONEDITIONABLE TRIGGER "USER_JAVA"."TRG_AFTER_IU_INVENTARIO_BAJO_STOCK" 
-AFTER INSERT OR UPDATE ON "USER_JAVA"."INVENTARIO"
-FOR EACH ROW
-DECLARE
-    v_umbral_bajo_stock NUMBER := 10; -- Define el umbral de bajo stock
-    v_nombre_producto VARCHAR2(100);
-BEGIN
-    -- Solo verificar si el stock actual es menor o igual al umbral
-    IF :NEW.stock <= v_umbral_bajo_stock AND (:OLD.stock IS NULL OR :OLD.stock > v_umbral_bajo_stock) THEN
-        -- Obtener el nombre del producto
-        SELECT nombre
-        INTO v_nombre_producto
-        FROM "USER_JAVA"."PRODUCTOS"
-        WHERE id_producto = :NEW.id_producto;
-
-        -- Insertar la alerta
-        INSERT INTO "USER_JAVA"."ALERTAS" (id_alerta, tipo, mensaje, fecha)
-        VALUES ("USER_JAVA"."ISEQ$$_76611".nextval,
-                'Bajo Stock',
-                'El producto ' || v_nombre_producto || ' tiene un stock de ' || :NEW.stock || ' unidades.',
-                SYSDATE);
-    END IF;
-EXCEPTION
-    WHEN NO_DATA_FOUND THEN
-        DBMS_OUTPUT.PUT_LINE('Error: No se encontró el producto con ID ' || :NEW.id_producto);
-    WHEN OTHERS THEN
-        DBMS_OUTPUT.PUT_LINE('Error al generar alerta de bajo stock: ' || SQLERRM);
-END;
-
-/
-ALTER TRIGGER "USER_JAVA"."TRG_AFTER_IU_INVENTARIO_BAJO_STOCK" ENABLE;
---------------------------------------------------------
---  DDL for Trigger TRG_BEFORE_INSERT_PRODUCT
---------------------------------------------------------
-
-  CREATE OR REPLACE NONEDITIONABLE TRIGGER "USER_JAVA"."TRG_BEFORE_INSERT_PRODUCT" 
-BEFORE INSERT ON "USER_JAVA"."PRODUCTOS"
-BEGIN
-    IF NOT FN_CAN_ADD_PRODUCT THEN
-        RAISE_APPLICATION_ERROR(-20001, 'No se puede agregar un producto. No hay inventarios disponibles.');
-    END IF;
-END;
-
-/
-ALTER TRIGGER "USER_JAVA"."TRG_BEFORE_INSERT_PRODUCT" ENABLE;
---------------------------------------------------------
---  DDL for Trigger TRG_AFTER_INSERT_PRODUCTOS_LOG
---------------------------------------------------------
-
-  CREATE OR REPLACE NONEDITIONABLE TRIGGER "USER_JAVA"."TRG_AFTER_INSERT_PRODUCTOS_LOG" 
-AFTER INSERT ON "USER_JAVA"."PRODUCTOS"
-FOR EACH ROW
-BEGIN
-    INSERT INTO "USER_JAVA"."LOGS" (id_log, id_usuario, accion, fecha)
-    VALUES ("USER_JAVA"."ISEQ$$_76635".nextval,
-            -- Asume que tienes una forma de identificar el usuario que realiza la acción
-            -- Esto podría ser una variable de sesión, una función de contexto, etc.
-            -- Para este ejemplo, lo dejaremos como NULL.
-            NULL,
-            'INSERT en PRODUCTOS (ID: ' || :NEW.id_producto || ', Nombre: ' || :NEW.nombre || ')',
-            SYSDATE);
-END;
-
-/
-ALTER TRIGGER "USER_JAVA"."TRG_AFTER_INSERT_PRODUCTOS_LOG" ENABLE;
---------------------------------------------------------
---  DDL for Trigger TRG_AFTER_UPDATE_PRODUCTOS_LOG
---------------------------------------------------------
-
-  CREATE OR REPLACE NONEDITIONABLE TRIGGER "USER_JAVA"."TRG_AFTER_UPDATE_PRODUCTOS_LOG" 
-AFTER UPDATE ON "USER_JAVA"."PRODUCTOS"
-FOR EACH ROW
-BEGIN
-    INSERT INTO "USER_JAVA"."LOGS" (id_log, id_usuario, accion, fecha)
-    VALUES ("USER_JAVA"."ISEQ$$_76635".nextval,
-            NULL,
-            'UPDATE en PRODUCTOS (ID: ' || :NEW.id_producto || ') - Nombre ANTES: ' || :OLD.nombre || ', AHORA: ' || :NEW.nombre,
-            SYSDATE);
-    -- Puedes añadir más detalles sobre las columnas actualizadas si es necesario
-END;
-
-/
-ALTER TRIGGER "USER_JAVA"."TRG_AFTER_UPDATE_PRODUCTOS_LOG" ENABLE;
---------------------------------------------------------
---  DDL for Trigger TRG_AFTER_DELETE_PRODUCTOS_LOG
---------------------------------------------------------
-
-  CREATE OR REPLACE NONEDITIONABLE TRIGGER "USER_JAVA"."TRG_AFTER_DELETE_PRODUCTOS_LOG" 
-AFTER DELETE ON "USER_JAVA"."PRODUCTOS"
-FOR EACH ROW
-BEGIN
-    INSERT INTO "USER_JAVA"."LOGS" (id_log, id_usuario, accion, fecha)
-    VALUES ("USER_JAVA"."ISEQ$$_76635".nextval,
-            NULL,
-            'DELETE en PRODUCTOS (ID: ' || :OLD.id_producto || ', Nombre: ' || :OLD.nombre || ')',
-            SYSDATE);
-END;
-
-/
-ALTER TRIGGER "USER_JAVA"."TRG_AFTER_DELETE_PRODUCTOS_LOG" ENABLE;
---------------------------------------------------------
---  DDL for Trigger TRG_AFTER_INSERT_VENTAS_LOG
---------------------------------------------------------
-
-  CREATE OR REPLACE NONEDITIONABLE TRIGGER "USER_JAVA"."TRG_AFTER_INSERT_VENTAS_LOG" 
-AFTER INSERT ON "USER_JAVA"."VENTAS"
-FOR EACH ROW
-BEGIN
-    INSERT INTO "USER_JAVA"."LOGS" (id_log, id_usuario, accion, fecha)
-    VALUES ("USER_JAVA"."ISEQ$$_76635".nextval,
-            NULL,
-            'INSERT en VENTAS (ID: ' || :NEW.id_venta || ', Cliente: ' || :NEW.id_cliente || ', Total: ' || :NEW.total || ')',
-            SYSDATE);
-END;
-
-/
-ALTER TRIGGER "USER_JAVA"."TRG_AFTER_INSERT_VENTAS_LOG" ENABLE;
 --------------------------------------------------------
 --  DDL for Procedure ACTUALIZAR_ESTADO_ORDEN
 --------------------------------------------------------
