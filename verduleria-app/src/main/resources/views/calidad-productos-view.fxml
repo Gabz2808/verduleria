@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.verduleriaapp.controllers.CalidadProductos"
+            prefHeight="400.0" prefWidth="600.0">
+
+    <TableView fx:id="tablaCalidad" layoutX="14.0" layoutY="14.0" prefHeight="370.0" prefWidth="570.0">
+        <columns>
+            <TableColumn fx:id="colIdCalidad" text="ID Calidad" prefWidth="100"/>
+            <TableColumn fx:id="colDescripcion" text="Descripción" prefWidth="150"/>
+            <TableColumn fx:id="colFecha" text="Fecha" prefWidth="120"/>
+            <TableColumn fx:id="colNombreProducto" text="Nombre Producto" prefWidth="180"/>
+        </columns>
+    </TableView>
+
+</AnchorPane>
