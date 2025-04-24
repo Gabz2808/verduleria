@@ -1,11 +1,11 @@
 package com.example.verduleriaapp.DAO;
 
-import com.example.verduleriaapp.models.Calidad;
 import com.example.verduleriaapp.utils.ConexionOracle;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import com.example.verduleriaapp.models.CalidadProducto;
 
 public class CalidadDAO {
     private Connection connection;
@@ -54,16 +54,16 @@ public class CalidadDAO {
         }
     }
 
-    public List<Calidad> obtenerCalidades() throws SQLException {
-        List<Calidad> calidades = new ArrayList<>();
-        String sql = "SELECT * FROM CALIDADES";
+    public List<CalidadProducto> obtenerCalidades() throws SQLException {
+        List<CalidadProducto> calidades = new ArrayList<>();
+        String sql = "SELECT * FROM CALIDAD"; // corregido
 
         try (PreparedStatement stmt = connection.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
-                Calidad c = new Calidad();
-                c.setIdCalidad(rs.getLong("ID_CALIDAD"));
+                CalidadProducto c = new CalidadProducto();
+                c.setIdCalidad((int) rs.getLong("ID_CALIDAD"));
                 c.setDescripcion(rs.getString("DESCRIPCION"));
                 calidades.add(c);
             }
@@ -73,4 +73,5 @@ public class CalidadDAO {
         }
         return calidades;
     }
+
 }

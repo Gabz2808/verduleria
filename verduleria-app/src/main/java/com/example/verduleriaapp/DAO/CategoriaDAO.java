@@ -76,4 +76,36 @@ public class CategoriaDAO {
         }
         return categorias;
     }
+    public Categoria buscarPorId(int id) throws SQLException {
+        String sql = "{ call OBTENER_CATEGORIA(?, ?, ?, ?) }";
+
+        try (CallableStatement stmt = connection.prepareCall(sql)) {
+            stmt.setInt(1, id); // id de entrada
+            stmt.registerOutParameter(2, Types.INTEGER);
+            stmt.registerOutParameter(3, Types.VARCHAR);
+            stmt.registerOutParameter(4, Types.VARCHAR);
+
+            stmt.execute();
+
+            int idCategoria = stmt.getInt(2);
+            if (stmt.wasNull()) {
+                return null; // no se encontró la categoría
+            }
+
+            String nombre = stmt.getString(3);
+            String descripcion = stmt.getString(4);
+
+            Categoria categoria = new Categoria();
+            categoria.setId(idCategoria);
+            categoria.setNombre(nombre);
+            categoria.setDescripcion(descripcion);
+
+            return categoria;
+        } catch (SQLException e) {
+            System.err.println("❌ Error al buscar categoría por ID: " + e.getMessage());
+            throw e;
+        }
+    }
+
+
 }

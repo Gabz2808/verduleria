@@ -1,85 +1,94 @@
 package com.example.verduleriaapp.models;
 
+import javafx.beans.property.*;
+
 public class Devoluciones {
-    private Long idDevolucion;   // ID de la devolución (Primary Key)
-    private Long idProducto;     // ID del producto (Foreign Key)
-    private Long idVenta;        // ID de la venta (Foreign Key -> MODIFICADO)
-    private Long idCliente;      // ID del cliente (Foreign Key)
-    private String motivo;       // Motivo de la devolución
-    private int cantidad;        // Cantidad de productos devueltos
+    private LongProperty idDevolucion;
+    private LongProperty idProducto;
+    private LongProperty idorden;
+    private LongProperty idCliente;
+    private StringProperty motivo;
+    private IntegerProperty cantidad;
 
-    // Constructor vacío
     public Devoluciones() {
+        this.idDevolucion = new SimpleLongProperty();
+        this.idProducto = new SimpleLongProperty();
+        this.idorden = new SimpleLongProperty();
+        this.idCliente = new SimpleLongProperty();
+        this.motivo = new SimpleStringProperty();
+        this.cantidad = new SimpleIntegerProperty();
     }
 
-    // Constructor con todos los atributos
-    public Devoluciones(Long idDevolucion, Long idProducto, Long idVenta, Long idCliente, String motivo, int cantidad) {
-        this.idDevolucion = idDevolucion;
-        this.idProducto = idProducto;
-        this.idVenta = idVenta;   // Cambio aplicado
-        this.idCliente = idCliente;
-        this.motivo = motivo;
-        this.cantidad = cantidad;
+    // Getters y setters
+    public long getIdDevolucion() {
+        return idDevolucion.get();
     }
 
-    // Getters y Setters
-    public Long getIdDevolucion() {
+    public void setIdDevolucion(long idDevolucion) {
+        this.idDevolucion.set(idDevolucion);
+    }
+
+    public LongProperty idDevolucionProperty() {
         return idDevolucion;
     }
 
-    public void setIdDevolucion(Long idDevolucion) {
-        this.idDevolucion = idDevolucion;
+    public long getIdProducto() {
+        return idProducto.get();
     }
 
-    public Long getIdProducto() {
+    public void setIdProducto(long idProducto) {
+        this.idProducto.set(idProducto);
+    }
+
+    public LongProperty idProductoProperty() {
         return idProducto;
     }
 
-    public void setIdProducto(Long idProducto) {
-        this.idProducto = idProducto;
+    public long getIdorden() {
+        return idorden.get();
     }
 
-    public Long getIdVenta() { // Cambio aplicado
-        return idVenta;
+    public void setIdorden(long idorden) {
+        this.idorden.set(idorden);
     }
 
-    public void setIdVenta(Long idVenta) { // Cambio aplicado
-        this.idVenta = idVenta;
+    public LongProperty idordenProperty() {
+        return idorden;
     }
 
-    public Long getIdCliente() {
+    public long getIdCliente() {
+        return idCliente.get();
+    }
+
+    public void setIdCliente(long idCliente) {
+        this.idCliente.set(idCliente);
+    }
+
+    public LongProperty idClienteProperty() {
         return idCliente;
     }
 
-    public void setIdCliente(Long idCliente) {
-        this.idCliente = idCliente;
-    }
-
     public String getMotivo() {
-        return motivo;
+        return motivo.get();
     }
 
     public void setMotivo(String motivo) {
-        this.motivo = motivo;
+        this.motivo.set(motivo);
+    }
+
+    public StringProperty motivoProperty() {
+        return motivo;
     }
 
     public int getCantidad() {
-        return cantidad;
+        return cantidad.get();
     }
 
     public void setCantidad(int cantidad) {
-        this.cantidad = cantidad;
+        this.cantidad.set(cantidad);
     }
 
-    @Override
-    public String toString() {
-        return "Devoluciones{" +
-                "idDevolucion=" + idDevolucion +
-                ", idProducto=" + idProducto +
-                ", idVenta=" + idVenta +   // Cambio aplicado
-                ", idCliente=" + idCliente +
-                ", motivo='" + motivo + '\'' +
-                ", cantidad=" + cantidad +
-                '}';
+    public IntegerProperty cantidadProperty() {
+        return cantidad;
     }
 }

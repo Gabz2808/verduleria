@@ -16,18 +16,15 @@
       <Label layoutX="20.0" layoutY="20.0" text="Productos" />
 
       <!-- Tabla para mostrar los productos -->
-      <TableView fx:id="tablaProductos" layoutX="20.0" layoutY="50.0" prefHeight="250.0" prefWidth="560.0">
+      <TableView fx:id="tablaProductos"  layoutX="20.0" layoutY="50.0" prefHeight="250.0" prefWidth="560.0">
          <columns>
-            <TableColumn fx:id="colId" text="ID" prefWidth="100.0" />
-            <TableColumn fx:id="colNombre" text="Nombre" prefWidth="200.0" />
-            <TableColumn fx:id="colCategoria" text="Categoría" prefWidth="150.0" />
-            <TableColumn fx:id="colUnidad" text="Unidad" prefWidth="100.0" />
-            <TableColumn fx:id="colProveedor" text="Proveedor" prefWidth="100.0" />
+            <TableColumn fx:id="colId" text="ID Producto"/>
+            <TableColumn fx:id="colNombre" text="Producto"/>
+            <TableColumn fx:id="colCategoria" text="Categoría"/>
+            <TableColumn fx:id="colUnidad" text="Unidad"/>
+            <TableColumn fx:id="colProveedor" text="Proveedor"/>
          </columns>
       </TableView>
 
-      <Button fx:id="btnAgregar" layoutX="20.0" layoutY="340.0" text="Agregar" onAction="#handleAgregar"/>
-      <Button fx:id="btnActualizar" layoutX="100.0" layoutY="340.0" text="Actualizar" onAction="#handleActualizar"/>
-      <Button fx:id="btnEliminar" layoutX="200.0" layoutY="340.0" text="Eliminar" onAction="#handleEliminar"/>
    </children>
 </AnchorPane>

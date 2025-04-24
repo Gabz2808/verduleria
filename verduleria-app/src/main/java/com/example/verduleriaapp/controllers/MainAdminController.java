@@ -41,17 +41,17 @@ public class MainAdminController {
 
     @FXML
     private void loadProductPane() {
-        loadPane("producto-view.fxml");
+        loadPane("/views/producto-view.fxml");
     }
 
     @FXML
     private void loadCategoryPane() {
-        loadPane("categoria-view.fxml");
+        loadPane("/views/categoria-view.fxml");
     }
 
     @FXML
     private void loadInventoryPane() {
-        loadPane("/views/GestionInventario.xml");
+        loadPane("/views/GestionInventario.fxml");
     }
 
     @FXML
@@ -67,46 +67,49 @@ public class MainAdminController {
 
     @FXML
     private void loadReturnsPane() {
-        loadPane("devolucion-view.fxml");
+        loadPane("/views/devolucion-view.fxml");
     }
 
     @FXML
     private void loadReportsPane() {
-        loadPane("reportes-view.fxml");
+        loadPane("/views/reporte-view.fxml");
     }
 
     @FXML
     private void loadExpensesPane() {
-        loadPane("gastos-view.fxml");
+        loadPane("/views/gasto-view.fxml");
     }
 
     @FXML
     private void loadQualityPane() {
-        loadPane("calidad-productos-view.fxml");
+        loadPane("/views/calidad-productos-view.fxml");
     }
 
     // Método genérico para cargar un nuevo pane en el área principal
-    private void loadPane(String route) {
+    private void loadPane(String fxmlPath) {
         try {
-            // Intenta cargar el recurso
-            URL resourceURL = getClass().getResource(route);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+            // Inyección de conexión en el controlador si lo necesita
+            loader.setControllerFactory(controllerClass -> {
+                try {
+                    if (controllerClass == CategoriaController.class) {
+                        return new CategoriaController(connection);
+                    }
+                    return controllerClass.getDeclaredConstructor().newInstance();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            });
 
-            // Validación: imprime un mensaje si el recurso no se encuentra
-            if (resourceURL == null) {
-                System.out.println("⚠️ Recurso no encontrado: " + route);
-                return;
-            }
-
-            FXMLLoader loader = new FXMLLoader(resourceURL);
-
-            // Cargar y reemplazar el contenido del Pane principal
-            AnchorPane pane = loader.load();
+            Parent pane = loader.load();
             MainPane.getChildren().setAll(pane);
+
         } catch (IOException e) {
             e.printStackTrace();
-            System.out.println("❌ Error al cargar la vista: " + route);
+            System.out.println("❌ Error al cargar la vista: " + fxmlPath);
         }
     }
+
 
     @FXML
     public void logout(ActionEvent event) {

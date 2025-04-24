@@ -1,33 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.BorderPane?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.example.verduleriaapp.controllers.MainController"
-            prefHeight="400.0" prefWidth="600.0">
-    <VBox alignment="TOP_CENTER" spacing="10.0" style="-fx-background-color: #2C3E50; -fx-pref-width: 220; -fx-padding: 20;">
-        <Label prefHeight="65.0" prefWidth="141.0" style="-fx-text-fill: white; -fx-font-size: 22px; -fx-font-weight: bold;" text="Verdulería Usuario" />
+<BorderPane prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.verduleriaapp.controllers.MainController">
 
-        <Button style="-fx-pref-width: 180; -fx-background-color: #34495E; -fx-text-fill: white;" text="Inicio" />
+    <!-- Menú a la izquierda -->
+    <left>
+        <VBox alignment="CENTER" spacing="10.0" style="-fx-background-color: #2C3E50; -fx-pref-width: 220; -fx-padding: 20;">
+            <Label prefHeight="65.0" prefWidth="141.0" style="-fx-text-fill: white; -fx-font-size: 22px; -fx-font-weight: bold;" text="Verdulería Usuario" />
 
-        <Label style="-fx-text-fill: #BDC3C7; -fx-font-weight: bold; -fx-padding: 10 0 5 0;" text="Gestión de Productos" />
-        <Button style="-fx-pref-width: 180; -fx-background-color: #34495E; -fx-text-fill: white;" text="Productos" />
-        <Button style="-fx-pref-width: 180; -fx-background-color: #34495E; -fx-text-fill: white;" text="Categorías" />
+            <Button style="-fx-pref-width: 180; -fx-background-color: #34495E; -fx-text-fill: white;" text="Inicio" />
 
-        <Label style="-fx-text-fill: #BDC3C7; -fx-font-weight: bold; -fx-padding: 10 0 5 0;" text="Gestión de Transacciones" />
-        <Button style="-fx-pref-width: 180; -fx-background-color: #34495E; -fx-text-fill: white;" text="Ventas" />
+            <Label style="-fx-text-fill: #BDC3C7; -fx-font-weight: bold; -fx-padding: 10 0 5 0;" text="Productos" />
+            <Button onAction="#loadProductPane" style="-fx-pref-width: 180; -fx-background-color: #34495E; -fx-text-fill: white;" text="Ver Productos" />
+            <Button onAction="#loadCategoryPane" style="-fx-pref-width: 180; -fx-background-color: #34495E; -fx-text-fill: white;" text="Categorías" />
 
-        <Label style="-fx-text-fill: #BDC3C7; -fx-font-weight: bold; -fx-padding: 10 0 5 0;" text="Gestión de Entidades" />
-        <Button style="-fx-pref-width: 180; -fx-background-color: #34495E; -fx-text-fill: white;" text="Clientes" />
+            <Label style="-fx-text-fill: #BDC3C7; -fx-font-weight: bold; -fx-padding: 10 0 5 0;" text="Inventario" />
+            <Button onAction="#loadInventoryPane" style="-fx-pref-width: 180; -fx-background-color: #34495E; -fx-text-fill: white;" text="Inventario" />
 
-        <Label style="-fx-text-fill: #BDC3C7; -fx-font-weight: bold; -fx-padding: 10 0 5 0;" text="Reportes y Alertas" />
-        <Button style="-fx-pref-width: 180; -fx-background-color: #34495E; -fx-text-fill: white;" text="Reportes" />
+            <Label style="-fx-text-fill: #BDC3C7; -fx-font-weight: bold; -fx-padding: 10 0 5 0;" text="Mis Compras" />
+            <Button onAction="#loadPurchasesPane" style="-fx-pref-width: 180; -fx-background-color: #34495E; -fx-text-fill: white;" text="Realizar Compra" />
 
-        <Button onAction="#logout" style="-fx-pref-width: 180;" text="Salir" />
-    </VBox>
-</AnchorPane>
+            <Button onAction="#logout" style="-fx-pref-width: 180; -fx-background-color: #C0392B; -fx-text-fill: white;" text="Salir" />
+        </VBox>
+    </left>
+
+    <!-- Contenido principal -->
+    <center>
+        <AnchorPane fx:id="MainPane" style="-fx-background-color: #F5F5F5;">
+            <Label fx:id="lblBienvenida" layoutX="20.0" layoutY="20.0" style="-fx-font-size: 18px;" text="Bienvenido(a) al Panel de Usuario" />
+        </AnchorPane>
+    </center>
+</BorderPane>

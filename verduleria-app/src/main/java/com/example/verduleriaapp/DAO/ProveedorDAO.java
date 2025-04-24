@@ -20,12 +20,12 @@ public class ProveedorDAO {
     // Obtener todos los proveedores
     public List<Proveedor> obtenerProveedores() throws SQLException {
         List<Proveedor> listaProveedores = new ArrayList<>();
-        String query = "SELECT ID, NOMBRE, CONTACTO, DIRECCION FROM PROVEEDORES";
+        String query = "SELECT * FROM PROVEEDORES";
         try (PreparedStatement statement = connection.prepareStatement(query);
              ResultSet resultSet = statement.executeQuery()) {
 
             while (resultSet.next()) {
-                long id = resultSet.getLong("ID"); // Usa getLong
+                long id = resultSet.getLong("ID_PROVEEDOR"); // Usa getLong
                 String nombre = resultSet.getString("NOMBRE");
                 String contacto = resultSet.getString("CONTACTO");
                 String direccion = resultSet.getString("DIRECCION");
@@ -68,5 +68,33 @@ public class ProveedorDAO {
             statement.executeUpdate();
         }
     }
+    public Proveedor buscarPorId(long id) throws SQLException {
+        String sql = "{ call OBTENER_PROVEEDOR(?, ?, ?, ?, ?) }";
+
+        try (CallableStatement stmt = connection.prepareCall(sql)) {
+            stmt.setLong(1, id); // id_p IN
+            stmt.registerOutParameter(2, Types.BIGINT); // o_id
+            stmt.registerOutParameter(3, Types.VARCHAR); // o_nombre
+            stmt.registerOutParameter(4, Types.VARCHAR); // o_contacto
+            stmt.registerOutParameter(5, Types.VARCHAR); // o_direccion
+
+            stmt.execute();
+
+            long idProveedor = stmt.getLong(2);
+            if (stmt.wasNull()) {
+                return null; // No se encontró el proveedor
+            }
+
+            String nombre = stmt.getString(3);
+            String contacto = stmt.getString(4);
+            String direccion = stmt.getString(5);
+
+            return new Proveedor(idProveedor, nombre, contacto, direccion);
+        } catch (SQLException e) {
+            System.err.println("❌ Error al buscar proveedor por ID: " + e.getMessage());
+            throw e;
+        }
+    }
+
 }
 

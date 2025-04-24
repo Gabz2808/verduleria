@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="600.0" prefWidth="800.0"
+            xmlns="http://javafx.com/javafx/23.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.verduleriaapp.controllers.GestionInventarioController"
+            stylesheets="@../styles/main.css">
+
+    <children>
+        <!-- TÍTULO -->
+        <Label layoutX="20.0" layoutY="20.0" text="Gestión de Inventario" styleClass="title-label" />
+
+
+
+
+        <!-- TABLA QUE DESPLIEGA EL INVENTARIO -->
+        <TableView fx:id="tablaInventario" layoutX="50.0" layoutY="100.0" prefHeight="400.0" prefWidth="700.0">
+            <columns>
+                <TableColumn fx:id="colIdInventario" text="ID Producto" />
+                <TableColumn fx:id="colNombreProducto" text="Nombre Producto" />
+                <TableColumn fx:id="colCategoria" text="Categoría" />
+                <TableColumn fx:id="colStock" text="Stock" />
+                <TableColumn fx:id="colUbicacion" text="Ubicación" />
+            </columns>
+        </TableView>
+
+
+
+    </children>
+</AnchorPane>

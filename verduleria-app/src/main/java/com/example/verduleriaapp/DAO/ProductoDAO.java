@@ -1,6 +1,7 @@
 package com.example.verduleriaapp.DAO;
 
 import com.example.verduleriaapp.models.Producto;
+import com.example.verduleriaapp.models.VistaProducto;
 import com.example.verduleriaapp.utils.ConexionOracle;
 
 import java.sql.*;
@@ -58,12 +59,40 @@ public class ProductoDAO {
         }
     }
 
-    // Método para eliminar producto
-    public void eliminarProducto(int idProducto) throws SQLException {
-        String query = "DELETE FROM PRODUCTOS WHERE ID_PRODUCTO = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+    public void eliminar(int idProducto) throws SQLException {
+        String call = "{ call USER_JAVA.eliminar_producto(?) }";
+        try (CallableStatement stmt = connection.prepareCall(call)) {
             stmt.setInt(1, idProducto);
-            stmt.executeUpdate();
+            stmt.execute();
         }
     }
+
+
+
+    public List<VistaProducto> obtenerVistaProductos() throws SQLException {
+        List<VistaProducto> productos = new ArrayList<>();
+        String sql = "SELECT * FROM V_PRODUCTOS";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                VistaProducto vp = new VistaProducto(
+                        rs.getInt("ID_PRODUCTO"),
+                        rs.getString("PRODUCTO"),
+                        rs.getString("CATEGORIA"),
+                        rs.getString("PROVEEDOR"),
+                        rs.getString("UNIDAD"),
+                        rs.getInt("ID_INVENTARIO"),
+                        rs.getInt("DISPONIBLE")
+
+                );
+                productos.add(vp);
+            }
+        }
+
+        return productos;
+    }
+
+
 }

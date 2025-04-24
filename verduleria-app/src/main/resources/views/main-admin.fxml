@@ -6,6 +6,8 @@
 <?import javafx.scene.layout.VBox?>
 
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <BorderPane prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.verduleriaapp.controllers.MainAdminController">
 
     <!-- Menú a la izquierda -->
@@ -30,9 +32,6 @@
             <Label style="-fx-text-fill: #BDC3C7; -fx-font-weight: bold; -fx-padding: 10 0 5 0;" text="Devoluciones" />
             <Button onAction="#loadReturnsPane" style="-fx-pref-width: 180; -fx-background-color: #34495E; -fx-text-fill: white;" text="Devoluciones" />
 
-            <Label style="-fx-text-fill: #BDC3C7; -fx-font-weight: bold; -fx-padding: 10 0 5 0;" text="Reportes y Gastos" />
-            <Button onAction="#loadReportsPane" style="-fx-pref-width: 180; -fx-background-color: #34495E; -fx-text-fill: white;" text="Reportes" />
-            <Button onAction="#loadExpensesPane" style="-fx-pref-width: 180; -fx-background-color: #34495E; -fx-text-fill: white;" text="Gastos" />
 
             <Button onAction="#logout" style="-fx-pref-width: 180; -fx-background-color: #C0392B; -fx-text-fill: white;" text="Salir" />
         </VBox>
@@ -40,8 +39,12 @@
 
     <!-- Contenido principal -->
     <center>
-        <AnchorPane fx:id="MainPane" style="-fx-background-color: #F5F5F5;">
-            <Label fx:id="lblBienvenida" layoutX="20.0" layoutY="20.0" style="-fx-font-size: 18px;" text="Bienvenido(a) al Panel de Administración" />
+        <AnchorPane fx:id="MainPane" style="-fx-background-color: linear-gradient(to bottom right, #E8F5E9, #C8E6C9); -fx-padding: 40; -fx-border-radius: 10; -fx-background-radius: 10;">
+            <VBox alignment="CENTER" spacing="20.0" layoutX="200.0" layoutY="100.0">
+                <Label fx:id="lblBienvenida" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2E7D32;" text="¡Bienvenido(a) a la Verdulería!" />
+                <Label style="-fx-font-size: 16px; -fx-text-fill: #388E3C;" text="Administra tus productos frescos con facilidad 🍅🥬🍌" />
+
+            </VBox>
         </AnchorPane>
     </center>
 </BorderPane>

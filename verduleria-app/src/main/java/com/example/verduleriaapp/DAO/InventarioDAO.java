@@ -103,6 +103,26 @@ public class InventarioDAO {
             cs.execute();
         }
     }
+    public List<Map<String, Object>> obtenerInventarioCompleto() throws SQLException {
+        List<Map<String, Object>> lista = new ArrayList<>();
+        String sql = "SELECT ID_PRODUCTO, NOMBRE_PRODUCTO, NOMBRE_CATEGORIA, STOCK, UBICACION FROM VISTA_INVENTARIO_COMPLETO";
 
+        try (PreparedStatement stmt = connection.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            ResultSetMetaData metaData = rs.getMetaData();
+            int columnCount = metaData.getColumnCount();
+
+            while (rs.next()) {
+                Map<String, Object> fila = new HashMap<>();
+                for (int i = 1; i <= columnCount; i++) {
+                    fila.put(metaData.getColumnName(i), rs.getObject(i));
+                }
+                lista.add(fila);
+            }
+        }
+
+        return lista;
+    }
 
 }

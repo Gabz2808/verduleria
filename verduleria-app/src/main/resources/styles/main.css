@@ -66,28 +66,10 @@
     -fx-border-radius: 5;
 }
 
-/* Estilo de las tablas */
-.table-view {
-    -fx-background-color: #FFFFFF;
-    -fx-border-color: #D1D1D1;
-    -fx-border-width: 1;
-    -fx-border-radius: 5;
-    -fx-table-cell-border-color: #E1E1E1;
-    -fx-padding: 5;
-}
 
-.table-view .column-header {
-    -fx-background-color: #F2F2F2; /* Fondo de las cabeceras */
-    -fx-border-color: #CCCCCC;
-    -fx-font-weight: bold;
-}
 
-/* Celda de tabla */
-.table-cell {
-    -fx-padding: 8;
-    -fx-font-size: 13px;
-    -fx-text-fill: #2C3E50; /* Azul oscuro para texto */
-}
+
+
 
 /* TextFields */
 .text-field {
@@ -128,4 +110,55 @@
 .hbox {
     -fx-spacing: 10;
     -fx-alignment: CENTER_LEFT;
+}
+
+/* Estilo de las tablas */
+.table-view {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #D1D1D1;
+    -fx-border-width: 1;
+    -fx-border-radius: 8;
+    -fx-table-cell-border-color: #E1E1E1;
+    -fx-padding: 10;
+    -fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.1), 6, 0, 0, 2); /* Sombra sutil */
+    -fx-alignment: CENTER; /* Centra la tabla */
+    -fx-max-width: 800px; /* Tamaño máximo para que no se expanda demasiado */
+    -fx-margin: 0 auto; /* Centrado horizontal */
+}
+
+/* Cabecera de columna */
+.table-view .column-header-background {
+    -fx-background-color: linear-gradient(to bottom, #F2F2F2, #E6E6E6);
+    -fx-border-color: #CCCCCC;
+    -fx-border-width: 0 0 1 0;
+}
+
+.table-view .column-header,
+.table-view .filler {
+    -fx-size: 30px;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-text-fill: #2C3E50;
+}
+
+/* Celdas de la tabla */
+.table-view .table-cell {
+    -fx-padding: 8;
+    -fx-font-size: 13px;
+    -fx-text-fill: #2C3E50;
+    -fx-alignment: CENTER_LEFT;
+}
+
+/* Fila seleccionada */
+.table-row-cell:selected {
+    -fx-background-color: #D6EAF8;
+}
+
+/* Alternancia de filas */
+.table-row-cell:odd {
+    -fx-background-color: #FAFAFA;
+}
+
+.table-row-cell:even {
+    -fx-background-color: #FFFFFF;
 }

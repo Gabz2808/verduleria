@@ -64,7 +64,7 @@ public class UnidadDAO {
 
             while (rs.next()) {
                 Unidad u = new Unidad();
-                u.setId(rs.getInt("ID"));
+                u.setId(rs.getInt("ID_UNIDAD"));
                 u.setNombre(rs.getString("NOMBRE"));
                 unidades.add(u);
             }
@@ -74,4 +74,32 @@ public class UnidadDAO {
         }
         return unidades;
     }
+    public Unidad buscarPorId(int id) throws SQLException {
+        String sql = "{ call OBTENER_UNIDAD(?, ?, ?) }";
+
+        try (CallableStatement stmt = connection.prepareCall(sql)) {
+            stmt.setInt(1, id); // id de entrada
+            stmt.registerOutParameter(2, Types.INTEGER); // o_id
+            stmt.registerOutParameter(3, Types.VARCHAR); // o_nombre
+
+            stmt.execute();
+
+            int idUnidad = stmt.getInt(2);
+            if (stmt.wasNull()) {
+                return null; // No se encontró la unidad
+            }
+
+            String nombre = stmt.getString(3);
+
+            Unidad unidad = new Unidad();
+            unidad.setId(idUnidad);
+            unidad.setNombre(nombre);
+
+            return unidad;
+        } catch (SQLException e) {
+            System.err.println("❌ Error al buscar unidad por ID: " + e.getMessage());
+            throw e;
+        }
+    }
+
 }

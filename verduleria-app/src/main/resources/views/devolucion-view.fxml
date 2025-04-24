@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.example.verduleriaapp.controllers.DevolucionController"
-            prefHeight="400.0" prefWidth="600.0">
-
+<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.verduleriaapp.controllers.DevolucionesController"
+            prefHeight="400.0" prefWidth="800.0">
+    <TableView fx:id="tablaDevoluciones" layoutX="10" layoutY="10" prefHeight="380.0" prefWidth="780.0">
+        <columns>
+            <TableColumn fx:id="colIdDevolucion" text="ID Devolución" prefWidth="100"/>
+            <TableColumn fx:id="colIdProducto" text="ID Producto" prefWidth="100"/>
+            <TableColumn fx:id="colIdOrden" text="ID Orden" prefWidth="100"/>
+            <TableColumn fx:id="colIdCliente" text="ID Cliente" prefWidth="100"/>
+            <TableColumn fx:id="colMotivo" text="Motivo" prefWidth="200"/>
+            <TableColumn fx:id="colCantidad" text="Cantidad" prefWidth="100"/>
+        </columns>
+    </TableView>
 </AnchorPane>

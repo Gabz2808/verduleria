@@ -1,4 +1,4 @@
 package com.example.verduleriaapp.controllers;
 
-public class ReporteController {
+public class ReportesController {
 }
